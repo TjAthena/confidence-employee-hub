@@ -101,8 +101,7 @@ const AdminDashboard = () => {
                     <p className="text-sm font-medium text-gray-600 mb-1">{metric.title}</p>
                     <p className="text-2xl font-bold text-navy">{metric.value}</p>
                     <p className={`text-sm mt-1 ${
-                      metric.changeType === 'positive' ? 'text-green-600' : 
-                      metric.changeType === 'negative' ? 'text-red-600' : 'text-gray-600'
+                      metric.changeType === 'positive' ? 'text-green-600' : 'text-gray-600'
                     }`}>
                       {metric.change}
                     </p>
