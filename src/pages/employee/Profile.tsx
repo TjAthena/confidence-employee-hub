@@ -4,7 +4,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
-import { Download, User, FileText, Phone, Mail, MapPin } from 'lucide-react';
+import { Download, User, FileText, Phone, Mail, MapPin, Calendar } from 'lucide-react';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table';
 
 const EmployeeProfile = () => {
   const { user } = useAuth();
@@ -24,12 +32,12 @@ const EmployeeProfile = () => {
       annual: 850000,
       monthly: 70833,
       breakdown: {
-        basic: 42500,
-        hra: 12750,
-        conveyance: 2500,
-        medical: 2500,
-        pf: 5100,
-        otherAllowances: 5583
+        basic: { annual: 425000, monthly: 35417 },
+        hra: { annual: 127500, monthly: 10625 },
+        conveyance: { annual: 30000, monthly: 2500 },
+        medical: { annual: 30000, monthly: 2500 },
+        pf: { annual: 51000, monthly: 4250 },
+        otherAllowances: { annual: 186500, monthly: 15541 }
       }
     },
     documents: {
@@ -84,6 +92,10 @@ const EmployeeProfile = () => {
                     <Phone className="w-4 h-4" />
                     {employeeData.personalInfo.phone}
                   </div>
+                  <div className="flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    Joined: {new Date(employeeData.personalInfo.dateOfJoining).toLocaleDateString('en-IN')}
+                  </div>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-gray-600 justify-center md:justify-start">
                   <MapPin className="w-4 h-4" />
@@ -117,7 +129,7 @@ const EmployeeProfile = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Salary Breakdown</CardTitle>
+            <CardTitle>Salary Breakdown (Monthly)</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -126,13 +138,89 @@ const EmployeeProfile = () => {
                   <span className="text-sm capitalize text-gray-600">
                     {key.replace(/([A-Z])/g, ' $1').trim()}
                   </span>
-                  <span className="font-semibold">{formatCurrency(value)}</span>
+                  <span className="font-semibold">{formatCurrency(value.monthly)}</span>
                 </div>
               ))}
+              <div className="border-t pt-2 flex justify-between items-center font-bold">
+                <span>Total</span>
+                <span>{formatCurrency(employeeData.salary.monthly)}</span>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Detailed Salary Breakdown Tables */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Detailed Salary Breakdown</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Annual Breakdown */}
+            <div>
+              <h3 className="font-semibold mb-4 text-navy">Annual Breakdown</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Component</TableHead>
+                    <TableHead className="text-right">Amount (₹)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Object.entries(employeeData.salary.breakdown).map(([key, value]) => (
+                    <TableRow key={key}>
+                      <TableCell className="capitalize">
+                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        {value.annual.toLocaleString()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow className="bg-gray-50 font-bold">
+                    <TableCell>Total Annual</TableCell>
+                    <TableCell className="text-right">
+                      {employeeData.salary.annual.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Monthly Breakdown */}
+            <div>
+              <h3 className="font-semibold mb-4 text-navy">Monthly Breakdown</h3>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Component</TableHead>
+                    <TableHead className="text-right">Amount (₹)</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {Object.entries(employeeData.salary.breakdown).map(([key, value]) => (
+                    <TableRow key={key}>
+                      <TableCell className="capitalize">
+                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                      </TableCell>
+                      <TableCell className="text-right font-medium">
+                        {value.monthly.toLocaleString()}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                  <TableRow className="bg-gray-50 font-bold">
+                    <TableCell>Total Monthly</TableCell>
+                    <TableCell className="text-right">
+                      {employeeData.salary.monthly.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Documents Section */}
       <Card>

@@ -9,7 +9,7 @@ import {
   Megaphone, 
   User, 
   LogOut,
-  Building2 
+  Upload
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -24,6 +24,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
     { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/admin/employees', icon: Users, label: 'Manage Employees' },
     { to: '/admin/announcements', icon: Megaphone, label: 'Announcements' },
+    { to: '/admin/document-upload', icon: Upload, label: 'Document Upload' },
   ];
 
   const employeeNavItems = [

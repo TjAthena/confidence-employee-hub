@@ -13,6 +13,7 @@ import EmployeeAnnouncements from "./pages/employee/Announcements";
 import AdminDashboard from "./pages/admin/Dashboard";
 import ManageEmployees from "./pages/admin/ManageEmployees";
 import AdminAnnouncements from "./pages/admin/Announcements";
+import DocumentUpload from "./pages/admin/DocumentUpload";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="employees" element={<ManageEmployees />} />
               <Route path="announcements" element={<AdminAnnouncements />} />
+              <Route path="document-upload" element={<DocumentUpload />} />
             </Route>
             
             <Route path="*" element={<NotFound />} />

@@ -1,14 +1,14 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, Plus, Edit, Trash2, Search } from 'lucide-react';
+import { Users, Plus, Edit, Trash2, Search, Upload } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import AddEmployeeForm from '@/components/forms/AddEmployeeForm';
+import { Link } from 'react-router-dom';
 
 const ManageEmployees = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -83,34 +83,19 @@ const ManageEmployees = () => {
     return `EMP${nextId.toString().padStart(3, '0')}`;
   };
 
-  const handleAddEmployee = () => {
-    if (!newEmployee.name || !newEmployee.email || !newEmployee.role || !newEmployee.department) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields",
-        variant: "destructive"
-      });
-      return;
-    }
-
+  const handleAddEmployee = (employeeData: any) => {
     const employee = {
-      id: generateEmployeeId(),
-      name: newEmployee.name,
+      id: employeeData.employeeId,
+      name: `${employeeData.firstName} ${employeeData.lastName}`,
       photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
-      role: newEmployee.role,
-      department: newEmployee.department,
-      email: newEmployee.email,
+      role: employeeData.designation,
+      department: employeeData.department,
+      email: employeeData.email,
       joinDate: new Date().toISOString().split('T')[0]
     };
 
     setEmployees([...employees, employee]);
-    setNewEmployee({ name: '', email: '', role: '', department: '', salary: '', phone: '', address: '' });
     setIsAddModalOpen(false);
-    
-    toast({
-      title: "Success",
-      description: "Employee added successfully"
-    });
   };
 
   const handleDeleteEmployee = (id: string) => {
@@ -130,99 +115,32 @@ const ManageEmployees = () => {
           <p className="text-gray-600">Add, edit, and manage employee records</p>
         </div>
         
-        <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-          <DialogTrigger asChild>
-            <Button className="bg-blue-accent hover:bg-blue-600">
-              <Plus className="w-4 h-4 mr-2" />
-              Add Employee
+        <div className="flex gap-2">
+          <Link to="/admin/document-upload">
+            <Button variant="outline" className="border-blue-accent text-blue-accent hover:bg-blue-50">
+              <Upload className="w-4 h-4 mr-2" />
+              Upload Documents
             </Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Add New Employee</DialogTitle>
-            </DialogHeader>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-              <div>
-                <Label htmlFor="name">Full Name *</Label>
-                <Input
-                  id="name"
-                  value={newEmployee.name}
-                  onChange={(e) => setNewEmployee({...newEmployee, name: e.target.value})}
-                  placeholder="Enter full name"
-                />
-              </div>
-              <div>
-                <Label htmlFor="email">Email *</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={newEmployee.email}
-                  onChange={(e) => setNewEmployee({...newEmployee, email: e.target.value})}
-                  placeholder="Enter email address"
-                />
-              </div>
-              <div>
-                <Label htmlFor="role">Role *</Label>
-                <Input
-                  id="role"
-                  value={newEmployee.role}
-                  onChange={(e) => setNewEmployee({...newEmployee, role: e.target.value})}
-                  placeholder="Enter job role"
-                />
-              </div>
-              <div>
-                <Label htmlFor="department">Department *</Label>
-                <Select value={newEmployee.department} onValueChange={(value) => setNewEmployee({...newEmployee, department: value})}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select department" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="Finance">Finance</SelectItem>
-                    <SelectItem value="Human Resources">Human Resources</SelectItem>
-                    <SelectItem value="Technology">Technology</SelectItem>
-                    <SelectItem value="Marketing">Marketing</SelectItem>
-                    <SelectItem value="Operations">Operations</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              <div>
-                <Label htmlFor="salary">Annual Salary</Label>
-                <Input
-                  id="salary"
-                  value={newEmployee.salary}
-                  onChange={(e) => setNewEmployee({...newEmployee, salary: e.target.value})}
-                  placeholder="Enter annual salary"
-                />
-              </div>
-              <div>
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  value={newEmployee.phone}
-                  onChange={(e) => setNewEmployee({...newEmployee, phone: e.target.value})}
-                  placeholder="Enter phone number"
-                />
-              </div>
-              <div className="md:col-span-2">
-                <Label htmlFor="address">Address</Label>
-                <Input
-                  id="address"
-                  value={newEmployee.address}
-                  onChange={(e) => setNewEmployee({...newEmployee, address: e.target.value})}
-                  placeholder="Enter full address"
-                />
-              </div>
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsAddModalOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleAddEmployee} className="bg-blue-accent hover:bg-blue-600">
+          </Link>
+          
+          <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-blue-accent hover:bg-blue-600">
+                <Plus className="w-4 h-4 mr-2" />
                 Add Employee
               </Button>
-            </div>
-          </DialogContent>
-        </Dialog>
+            </DialogTrigger>
+            <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+              <DialogHeader>
+                <DialogTitle>Add New Employee</DialogTitle>
+              </DialogHeader>
+              <AddEmployeeForm 
+                onSubmit={handleAddEmployee}
+                onCancel={() => setIsAddModalOpen(false)}
+              />
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
 
       {/* Filters */}
