@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Building2, Users } from 'lucide-react';
+import { Users } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const Login = () => {
@@ -53,87 +53,150 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
-      <div className="w-full max-w-md animate-fade-in">
-        {/* Logo Section */}
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-accent rounded-full mb-4">
-            <Building2 className="w-8 h-8 text-white" />
-          </div>
-          <h1 className="text-2xl font-bold text-navy mb-2">Confidence Financial Services</h1>
-          <p className="text-gray-600">Employee Management Portal</p>
-        </div>
-
-        <Card className="shadow-lg">
-          <CardHeader>
-            <CardTitle>Sign In</CardTitle>
-            <CardDescription>
-              Access your employee portal with your credentials
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label htmlFor="id" className="block text-sm font-medium mb-2">
-                  Employee ID / Admin ID
-                </label>
-                <Input
-                  id="id"
-                  type="text"
-                  placeholder="Enter your ID"
-                  value={credentials.id}
-                  onChange={(e) => setCredentials(prev => ({ ...prev, id: e.target.value }))}
-                  className="w-full"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium mb-2">
-                  Password
-                </label>
-                <Input
-                  id="password"
-                  type="password"
-                  placeholder="Enter your password"
-                  value={credentials.password}
-                  onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
-                  className="w-full"
-                />
-              </div>
-
-              {error && (
-                <Alert variant="destructive">
-                  <AlertDescription>{error}</AlertDescription>
-                </Alert>
-              )}
-
-              <Button 
-                type="submit" 
-                className="w-full bg-blue-accent hover:bg-blue-600" 
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing in...' : 'Sign In'}
-              </Button>
-            </form>
-
-            {/* Demo Credentials */}
-            <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-              <p className="text-sm font-medium text-gray-700 mb-2">Demo Credentials:</p>
-              <div className="space-y-2 text-xs">
-                <div className="flex items-center gap-2">
-                  <Users className="w-3 h-3" />
-                  <span className="font-medium">Admin:</span>
-                  <span>ID: admin001, Password: admin123</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Users className="w-3 h-3" />
-                  <span className="font-medium">Employee:</span>
-                  <span>ID: emp001, Password: emp123</span>
-                </div>
-              </div>
+    <div className="min-h-screen flex bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600">
+      {/* Left Side - Illustration */}
+      <div className="hidden lg:flex flex-1 items-center justify-center p-12">
+        <div className="max-w-md text-white">
+          <div className="mb-8">
+            <img 
+              src="/lovable-uploads/3adc0623-9d8c-4697-960c-98ba3ac3e044.png" 
+              alt="Confidence Financial Services" 
+              className="w-16 h-16 bg-white rounded-full p-2 mb-6"
+            />
+            <h2 className="text-3xl font-bold mb-4">CONFIDENCE</h2>
+            <h3 className="text-2xl font-semibold mb-6">FINANCIAL SERVICES</h3>
+            <div className="bg-green-500 text-white px-4 py-2 rounded text-sm font-medium inline-block mb-4">
+              ₹Protection ₹Security ₹Freedom
             </div>
-          </CardContent>
-        </Card>
+          </div>
+          
+          {/* Illustration Icons */}
+          <div className="space-y-4 opacity-80">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <span className="text-lg">💰</span>
+              </div>
+              <span>Financial Protection</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <span className="text-lg">🏠</span>
+              </div>
+              <span>Secure Investments</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
+                <span className="text-lg">⚕️</span>
+              </div>
+              <span>Health Insurance</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Side - Login Form */}
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className="w-full max-w-md">
+          {/* Mobile Logo */}
+          <div className="lg:hidden text-center mb-8">
+            <img 
+              src="/lovable-uploads/3adc0623-9d8c-4697-960c-98ba3ac3e044.png" 
+              alt="Confidence Financial Services" 
+              className="w-16 h-16 bg-white rounded-full p-2 mx-auto mb-4"
+            />
+            <h1 className="text-2xl font-bold text-white mb-2">CONFIDENCE</h1>
+            <h2 className="text-xl font-semibold text-white">FINANCIAL SERVICES</h2>
+          </div>
+
+          <Card className="bg-white bg-opacity-95 backdrop-blur-sm shadow-2xl border-0">
+            <CardHeader className="text-center">
+              <CardTitle className="text-2xl font-bold text-gray-800">Sign In</CardTitle>
+              <CardDescription className="text-gray-600">
+                Enter your credentials to access your account
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="space-y-6">
+                <div>
+                  <label htmlFor="id" className="block text-sm font-medium text-gray-700 mb-2">
+                    Employee ID / Admin ID
+                  </label>
+                  <Input
+                    id="id"
+                    type="text"
+                    placeholder="Enter your ID"
+                    value={credentials.id}
+                    onChange={(e) => setCredentials(prev => ({ ...prev, id: e.target.value }))}
+                    className="w-full bg-white border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                    Password
+                  </label>
+                  <Input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your Password"
+                    value={credentials.password}
+                    onChange={(e) => setCredentials(prev => ({ ...prev, password: e.target.value }))}
+                    className="w-full bg-white border-gray-300 focus:border-purple-500 focus:ring-purple-500"
+                  />
+                </div>
+
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertDescription>{error}</AlertDescription>
+                  </Alert>
+                )}
+
+                <Button 
+                  type="submit" 
+                  className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white py-3 rounded-lg font-medium transition-all duration-200 transform hover:scale-105" 
+                  disabled={isLoading}
+                >
+                  {isLoading ? 'Signing in...' : 'Sign In'}
+                </Button>
+
+                <div className="text-center">
+                  <button 
+                    type="button" 
+                    className="text-purple-600 hover:text-purple-700 text-sm font-medium"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+              </form>
+
+              {/* Demo Credentials */}
+              <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
+                <p className="text-sm font-medium text-gray-700 mb-3 text-center">Demo Credentials:</p>
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center justify-between p-2 bg-white rounded border">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-3 h-3 text-blue-600" />
+                      <span className="font-medium text-blue-600">Admin:</span>
+                    </div>
+                    <span className="text-gray-600">ID: admin001, Password: admin123</span>
+                  </div>
+                  <div className="flex items-center justify-between p-2 bg-white rounded border">
+                    <div className="flex items-center gap-2">
+                      <Users className="w-3 h-3 text-green-600" />
+                      <span className="font-medium text-green-600">Employee:</span>
+                    </div>
+                    <span className="text-gray-600">ID: emp001, Password: emp123</span>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Footer Text */}
+          <div className="text-center mt-6 text-white text-sm opacity-80">
+            <p>Error in Login: Contact admin for help</p>
+          </div>
+        </div>
       </div>
     </div>
   );
