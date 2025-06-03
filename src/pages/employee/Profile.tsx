@@ -31,6 +31,7 @@ const EmployeeProfile = () => {
     salary: {
       annual: 850000,
       monthly: 70833,
+      incentives: 8000,
       breakdown: {
         basic: { annual: 425000, monthly: 35417 },
         hra: { annual: 127500, monthly: 10625 },
@@ -108,13 +109,13 @@ const EmployeeProfile = () => {
       </Card>
 
       {/* Salary Information */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Salary Overview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Salary Overview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <p className="text-sm text-gray-600">Annual Salary</p>
                 <p className="text-2xl font-bold text-navy">{formatCurrency(employeeData.salary.annual)}</p>
@@ -123,32 +124,20 @@ const EmployeeProfile = () => {
                 <p className="text-sm text-gray-600">Monthly Salary</p>
                 <p className="text-xl font-semibold text-blue-accent">{formatCurrency(employeeData.salary.monthly)}</p>
               </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Salary Breakdown (Monthly)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {Object.entries(employeeData.salary.breakdown).map(([key, value]) => (
-                <div key={key} className="flex justify-between items-center">
-                  <span className="text-sm capitalize text-gray-600">
-                    {key.replace(/([A-Z])/g, ' $1').trim()}
-                  </span>
-                  <span className="font-semibold">{formatCurrency(value.monthly)}</span>
-                </div>
-              ))}
-              <div className="border-t pt-2 flex justify-between items-center font-bold">
-                <span>Total</span>
-                <span>{formatCurrency(employeeData.salary.monthly)}</span>
+              <div>
+                <p className="text-sm text-gray-600">Monthly Incentives</p>
+                <p className="text-xl font-semibold text-green-600">{formatCurrency(employeeData.salary.incentives)}</p>
               </div>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm text-gray-600 mb-1">Total Monthly Income</p>
+              <p className="text-2xl font-bold text-green-700">
+                {formatCurrency(employeeData.salary.monthly + employeeData.salary.incentives)}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Detailed Salary Breakdown Tables */}
       <Card>
@@ -178,10 +167,16 @@ const EmployeeProfile = () => {
                       </TableCell>
                     </TableRow>
                   ))}
+                  <TableRow>
+                    <TableCell>Incentives</TableCell>
+                    <TableCell className="text-right font-medium">
+                      {(employeeData.salary.incentives * 12).toLocaleString()}
+                    </TableCell>
+                  </TableRow>
                   <TableRow className="bg-gray-50 font-bold">
                     <TableCell>Total Annual</TableCell>
                     <TableCell className="text-right">
-                      {employeeData.salary.annual.toLocaleString()}
+                      {(employeeData.salary.annual + (employeeData.salary.incentives * 12)).toLocaleString()}
                     </TableCell>
                   </TableRow>
                 </TableBody>
@@ -209,10 +204,16 @@ const EmployeeProfile = () => {
                       </TableCell>
                     </TableRow>
                   ))}
+                  <TableRow>
+                    <TableCell>Incentives</TableCell>
+                    <TableCell className="text-right font-medium">
+                      {employeeData.salary.incentives.toLocaleString()}
+                    </TableCell>
+                  </TableRow>
                   <TableRow className="bg-gray-50 font-bold">
                     <TableCell>Total Monthly</TableCell>
                     <TableCell className="text-right">
-                      {employeeData.salary.monthly.toLocaleString()}
+                      {(employeeData.salary.monthly + employeeData.salary.incentives).toLocaleString()}
                     </TableCell>
                   </TableRow>
                 </TableBody>

@@ -121,29 +121,48 @@ const ManageEmployees = () => {
     const employee = {
       id: employeeData.employeeId,
       name: `${employeeData.firstName} ${employeeData.lastName}`,
-      photo: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
+      photo: employeeData.profilePhoto ? URL.createObjectURL(employeeData.profilePhoto) : 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face',
       role: employeeData.designation,
       department: employeeData.department,
       email: employeeData.email,
       joinDate: new Date().toISOString().split('T')[0],
       phone: employeeData.phoneNumber,
       salary: {
-        annual: employeeData.annualCtc,
-        monthly: employeeData.monthlyCtc,
+        annual: parseInt(employeeData.annualCtc) || 0,
+        monthly: parseInt(employeeData.monthlyCtc) || 0,
         breakdown: {
-          basic: employeeData.basicMonthly,
-          hra: employeeData.hraMonthly,
-          conveyance: employeeData.conveyanceMonthly,
-          medical: employeeData.medicalMonthly,
-          pf: employeeData.pfMonthly,
-          incentives: employeeData.incentivesMonthly,
-          other: employeeData.otherMonthly
+          basic: parseInt(employeeData.basicMonthly) || 0,
+          hra: parseInt(employeeData.hraMonthly) || 0,
+          conveyance: parseInt(employeeData.conveyanceMonthly) || 0,
+          medical: parseInt(employeeData.medicalMonthly) || 0,
+          pf: parseInt(employeeData.pfMonthly) || 0,
+          incentives: parseInt(employeeData.incentives) || 0,
+          other: parseInt(employeeData.otherMonthly) || 0
         }
+      },
+      bankDetails: {
+        bankName: employeeData.bankName || '',
+        accountNumber: employeeData.accountNumber || '',
+        ifsc: employeeData.ifscCode || ''
+      },
+      education: {
+        degree: employeeData.degree || '',
+        institute: employeeData.institute || '',
+        year: employeeData.graduationYear || ''
+      },
+      emergencyContact: {
+        name: employeeData.emergencyContactName || '',
+        relationship: employeeData.emergencyContactRelationship || '',
+        phone: employeeData.emergencyContactPhone || ''
       }
     };
 
     setEmployees([...employees, employee]);
     setIsAddModalOpen(false);
+    toast({
+      title: "Success",
+      description: "Employee added successfully. Login credentials have been created."
+    });
   };
 
   const handleViewEmployee = (employee: any) => {
@@ -167,13 +186,34 @@ const ManageEmployees = () => {
   const handleUpdateEmployee = (updatedData: any) => {
     setEmployees(prev => prev.map(emp => 
       emp.id === selectedEmployee.id 
-        ? { ...emp, ...updatedData }
+        ? { 
+            ...emp, 
+            name: `${updatedData.firstName} ${updatedData.lastName}`,
+            email: updatedData.email,
+            phone: updatedData.phoneNumber,
+            role: updatedData.designation,
+            department: updatedData.department,
+            salary: {
+              annual: parseInt(updatedData.annualCtc) || emp.salary.annual,
+              monthly: parseInt(updatedData.monthlyCtc) || emp.salary.monthly,
+              breakdown: {
+                basic: parseInt(updatedData.basicMonthly) || emp.salary.breakdown.basic,
+                hra: parseInt(updatedData.hraMonthly) || emp.salary.breakdown.hra,
+                conveyance: parseInt(updatedData.conveyanceMonthly) || emp.salary.breakdown.conveyance,
+                medical: parseInt(updatedData.medicalMonthly) || emp.salary.breakdown.medical,
+                pf: parseInt(updatedData.pfMonthly) || emp.salary.breakdown.pf,
+                incentives: parseInt(updatedData.incentives) || emp.salary.breakdown.incentives,
+                other: parseInt(updatedData.otherMonthly) || emp.salary.breakdown.other
+              }
+            },
+            photo: updatedData.profilePhoto ? URL.createObjectURL(updatedData.profilePhoto) : emp.photo
+          }
         : emp
     ));
     setIsEditModalOpen(false);
     toast({
       title: "Success",
-      description: "Employee updated successfully"
+      description: "Employee details updated successfully"
     });
   };
 
@@ -388,6 +428,7 @@ const ManageEmployees = () => {
               onSubmit={handleUpdateEmployee}
               onCancel={() => setIsEditModalOpen(false)}
               initialData={selectedEmployee}
+              isEdit={true}
             />
           )}
         </DialogContent>
