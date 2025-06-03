@@ -16,6 +16,7 @@ interface EditEmployeeFormProps {
 
 const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel, initialData }) => {
   const [formData, setFormData] = useState({
+    employeeId: '',
     firstName: '',
     lastName: '',
     email: '',
@@ -31,6 +32,15 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel,
     pfMonthly: '',
     otherMonthly: '',
     incentives: '',
+    bankName: '',
+    accountNumber: '',
+    ifscCode: '',
+    degree: '',
+    institute: '',
+    graduationYear: '',
+    emergencyContactName: '',
+    emergencyContactRelationship: '',
+    emergencyContactPhone: '',
     profilePhoto: null as File | null
   });
 
@@ -39,6 +49,7 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel,
   useEffect(() => {
     if (initialData) {
       setFormData({
+        employeeId: initialData.id || '',
         firstName: initialData.name?.split(' ')[0] || '',
         lastName: initialData.name?.split(' ').slice(1).join(' ') || '',
         email: initialData.email || '',
@@ -54,6 +65,15 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel,
         pfMonthly: initialData.salary?.breakdown?.pf?.toString() || '',
         otherMonthly: initialData.salary?.breakdown?.other?.toString() || '',
         incentives: initialData.salary?.breakdown?.incentives?.toString() || '',
+        bankName: initialData.bankDetails?.bankName || '',
+        accountNumber: initialData.bankDetails?.accountNumber || '',
+        ifscCode: initialData.bankDetails?.ifsc || '',
+        degree: initialData.education?.degree || '',
+        institute: initialData.education?.institute || '',
+        graduationYear: initialData.education?.year || '',
+        emergencyContactName: initialData.emergencyContact?.name || '',
+        emergencyContactRelationship: initialData.emergencyContact?.relationship || '',
+        emergencyContactPhone: initialData.emergencyContact?.phone || '',
         profilePhoto: null
       });
       
@@ -165,6 +185,27 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel,
                 />
                 <p className="text-sm text-gray-500 mt-1">Max 5MB, JPG/PNG only</p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Employee ID */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Employee Information</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div>
+              <Label htmlFor="employeeId">Employee ID</Label>
+              <Input
+                id="employeeId"
+                value={formData.employeeId}
+                onChange={(e) => handleInputChange('employeeId', e.target.value)}
+                placeholder="Employee ID"
+                disabled
+                className="bg-gray-100"
+              />
+              <p className="text-xs text-gray-500 mt-1">Employee ID cannot be changed</p>
             </div>
           </CardContent>
         </Card>
@@ -344,18 +385,131 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel,
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="incentives">Monthly Incentives (₹)</Label>
-                <Input
-                  id="incentives"
-                  type="number"
-                  value={formData.incentives}
-                  onChange={(e) => handleInputChange('incentives', e.target.value)}
-                  placeholder="Enter Monthly Incentives"
-                />
-                <p className="text-xs text-gray-500 mt-1">Incentives are added separately to monthly salary</p>
-              </div>
+            <div>
+              <Label htmlFor="incentives">Monthly Incentives (₹)</Label>
+              <Input
+                id="incentives"
+                type="number"
+                value={formData.incentives}
+                onChange={(e) => handleInputChange('incentives', e.target.value)}
+                placeholder="Enter Monthly Incentives"
+              />
+              <p className="text-xs text-gray-500 mt-1">Incentives are added separately to monthly salary</p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Bank Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Bank Details</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="bankName">Bank Name</Label>
+              <Input
+                id="bankName"
+                value={formData.bankName}
+                onChange={(e) => handleInputChange('bankName', e.target.value)}
+                placeholder="Enter Bank Name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="accountNumber">Account Number</Label>
+              <Input
+                id="accountNumber"
+                value={formData.accountNumber}
+                onChange={(e) => handleInputChange('accountNumber', e.target.value)}
+                placeholder="Enter Account Number"
+              />
+            </div>
+            <div className="md:col-span-2">
+              <Label htmlFor="ifscCode">IFSC Code</Label>
+              <Input
+                id="ifscCode"
+                value={formData.ifscCode}
+                onChange={(e) => handleInputChange('ifscCode', e.target.value)}
+                placeholder="Enter IFSC Code"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Education Details */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Education Details</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="degree">Degree/Qualification</Label>
+              <Input
+                id="degree"
+                value={formData.degree}
+                onChange={(e) => handleInputChange('degree', e.target.value)}
+                placeholder="Enter Degree"
+              />
+            </div>
+            <div>
+              <Label htmlFor="institute">Institute/University</Label>
+              <Input
+                id="institute"
+                value={formData.institute}
+                onChange={(e) => handleInputChange('institute', e.target.value)}
+                placeholder="Enter Institute"
+              />
+            </div>
+            <div>
+              <Label htmlFor="graduationYear">Graduation Year</Label>
+              <Input
+                id="graduationYear"
+                value={formData.graduationYear}
+                onChange={(e) => handleInputChange('graduationYear', e.target.value)}
+                placeholder="Enter Year"
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Emergency Contact */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Emergency Contact</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="emergencyContactName">Contact Name</Label>
+              <Input
+                id="emergencyContactName"
+                value={formData.emergencyContactName}
+                onChange={(e) => handleInputChange('emergencyContactName', e.target.value)}
+                placeholder="Enter Contact Name"
+              />
+            </div>
+            <div>
+              <Label htmlFor="emergencyContactRelationship">Relationship</Label>
+              <Select value={formData.emergencyContactRelationship} onValueChange={(value) => handleInputChange('emergencyContactRelationship', value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Relationship" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Father">Father</SelectItem>
+                  <SelectItem value="Mother">Mother</SelectItem>
+                  <SelectItem value="Spouse">Spouse</SelectItem>
+                  <SelectItem value="Sibling">Sibling</SelectItem>
+                  <SelectItem value="Friend">Friend</SelectItem>
+                  <SelectItem value="Other">Other</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label htmlFor="emergencyContactPhone">Contact Phone</Label>
+              <Input
+                id="emergencyContactPhone"
+                value={formData.emergencyContactPhone}
+                onChange={(e) => handleInputChange('emergencyContactPhone', e.target.value)}
+                placeholder="Enter Contact Phone"
+              />
             </div>
           </CardContent>
         </Card>

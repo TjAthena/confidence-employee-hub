@@ -62,7 +62,7 @@ const Login = () => {
         <div className="max-w-md text-white text-center">
           <div className="mb-8">
             <img 
-              src="/lovable-uploads/4a4bd754-01b7-47fe-9c4f-f9b35a12cf3a.png" 
+              src="/lovable-uploads/4cd0f138-e865-4e5d-b5f5-d130269dc53d.png" 
               alt="Confidence Financial Services" 
               className="w-32 h-32 mx-auto mb-6 rounded-full object-cover border-4 border-white border-opacity-30"
             />
@@ -90,7 +90,7 @@ const Login = () => {
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <img 
-              src="/lovable-uploads/4a4bd754-01b7-47fe-9c4f-f9b35a12cf3a.png" 
+              src="/lovable-uploads/4cd0f138-e865-4e5d-b5f5-d130269dc53d.png" 
               alt="Confidence Financial Services" 
               className="w-24 h-24 mx-auto mb-4 rounded-full object-cover border-4 border-white border-opacity-30"
             />
