@@ -79,6 +79,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel })
     conveyanceMonthly: 0,
     medicalMonthly: 0,
     pfMonthly: 0,
+    incentivesMonthly: 0,
     otherMonthly: 0
   });
 
@@ -185,9 +186,10 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel })
       conveyanceAnnual: formData.conveyanceMonthly * 12,
       medicalAnnual: formData.medicalMonthly * 12,
       pfAnnual: formData.pfMonthly * 12,
+      incentivesAnnual: formData.incentivesMonthly * 12,
       otherAnnual: formData.otherMonthly * 12,
       totalAnnual: (formData.basicMonthly + formData.hraMonthly + formData.conveyanceMonthly + 
-                   formData.medicalMonthly + formData.pfMonthly + formData.otherMonthly) * 12
+                   formData.medicalMonthly + formData.pfMonthly + formData.incentivesMonthly + formData.otherMonthly) * 12
     };
   };
 
@@ -794,6 +796,16 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel })
                 />
               </div>
               <div>
+                <Label htmlFor="incentivesMonthly">Incentives (Monthly)</Label>
+                <Input
+                  id="incentivesMonthly"
+                  type="number"
+                  value={formData.incentivesMonthly}
+                  onChange={(e) => handleInputChange('incentivesMonthly', Number(e.target.value))}
+                  placeholder="Incentives amount"
+                />
+              </div>
+              <div>
                 <Label htmlFor="otherMonthly">Other (Monthly)</Label>
                 <Input
                   id="otherMonthly"
@@ -808,10 +820,10 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel })
 
           {/* Annual Breakdown Display */}
           {(formData.basicMonthly > 0 || formData.hraMonthly > 0 || formData.conveyanceMonthly > 0 || 
-            formData.medicalMonthly > 0 || formData.pfMonthly > 0 || formData.otherMonthly > 0) && (
+            formData.medicalMonthly > 0 || formData.pfMonthly > 0 || formData.incentivesMonthly > 0 || formData.otherMonthly > 0) && (
             <div className="p-4 bg-gray-50 rounded-lg">
               <h4 className="font-medium mb-3">Annual Breakdown (Auto-calculated)</h4>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div>
                   <Label className="text-xs">Basic (Annual)</Label>
                   <p className="font-medium">₹{(formData.basicMonthly * 12).toLocaleString()}</p>
@@ -833,10 +845,14 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel })
                   <p className="font-medium">₹{(formData.pfMonthly * 12).toLocaleString()}</p>
                 </div>
                 <div>
+                  <Label className="text-xs">Incentives (Annual)</Label>
+                  <p className="font-medium">₹{(formData.incentivesMonthly * 12).toLocaleString()}</p>
+                </div>
+                <div>
                   <Label className="text-xs">Other (Annual)</Label>
                   <p className="font-medium">₹{(formData.otherMonthly * 12).toLocaleString()}</p>
                 </div>
-                <div className="md:col-span-3 pt-2 border-t">
+                <div className="md:col-span-4 pt-2 border-t">
                   <Label className="text-xs">Total Annual</Label>
                   <p className="font-bold text-lg">₹{getAnnualBreakdown().totalAnnual.toLocaleString()}</p>
                 </div>

@@ -5,15 +5,20 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Users, Plus, Edit, Trash2, Search, Upload } from 'lucide-react';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { Users, Plus, Edit, Trash2, Search, Upload, Eye } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import AddEmployeeForm from '@/components/forms/AddEmployeeForm';
+import EmployeeDetailsView from '@/components/EmployeeDetailsView';
 import { Link } from 'react-router-dom';
 
 const ManageEmployees = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedRole, setSelectedRole] = useState('all');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<any>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const employeesPerPage = 10;
 
@@ -25,7 +30,36 @@ const ManageEmployees = () => {
       role: 'Senior Analyst',
       department: 'Finance',
       email: 'john.doe@confidencefs.com',
-      joinDate: '2022-03-15'
+      joinDate: '2022-03-15',
+      phone: '+91 9876543210',
+      salary: {
+        annual: 800000,
+        monthly: 66667,
+        breakdown: {
+          basic: 30000,
+          hra: 15000,
+          conveyance: 5000,
+          medical: 2000,
+          pf: 3600,
+          incentives: 8000,
+          other: 3067
+        }
+      },
+      bankDetails: {
+        bankName: 'State Bank of India',
+        accountNumber: '12345678901',
+        ifsc: 'SBIN0001234'
+      },
+      education: {
+        degree: 'MBA Finance',
+        institute: 'Delhi University',
+        year: '2020'
+      },
+      emergencyContact: {
+        name: 'Jane Doe',
+        relationship: 'Spouse',
+        phone: '+91 9876543211'
+      }
     },
     {
       id: 'EMP002',
@@ -91,18 +125,55 @@ const ManageEmployees = () => {
       role: employeeData.designation,
       department: employeeData.department,
       email: employeeData.email,
-      joinDate: new Date().toISOString().split('T')[0]
+      joinDate: new Date().toISOString().split('T')[0],
+      phone: employeeData.phoneNumber,
+      salary: {
+        annual: employeeData.annualCtc,
+        monthly: employeeData.monthlyCtc,
+        breakdown: {
+          basic: employeeData.basicMonthly,
+          hra: employeeData.hraMonthly,
+          conveyance: employeeData.conveyanceMonthly,
+          medical: employeeData.medicalMonthly,
+          pf: employeeData.pfMonthly,
+          incentives: employeeData.incentivesMonthly,
+          other: employeeData.otherMonthly
+        }
+      }
     };
 
     setEmployees([...employees, employee]);
     setIsAddModalOpen(false);
   };
 
+  const handleViewEmployee = (employee: any) => {
+    setSelectedEmployee(employee);
+    setIsViewModalOpen(true);
+  };
+
+  const handleEditEmployee = (employee: any) => {
+    setSelectedEmployee(employee);
+    setIsEditModalOpen(true);
+  };
+
   const handleDeleteEmployee = (id: string) => {
     setEmployees(employees.filter(emp => emp.id !== id));
     toast({
       title: "Success",
-      description: "Employee deleted successfully"
+      description: "Employee deleted successfully. Login credentials have been removed."
+    });
+  };
+
+  const handleUpdateEmployee = (updatedData: any) => {
+    setEmployees(prev => prev.map(emp => 
+      emp.id === selectedEmployee.id 
+        ? { ...emp, ...updatedData }
+        : emp
+    ));
+    setIsEditModalOpen(false);
+    toast({
+      title: "Success",
+      description: "Employee updated successfully"
     });
   };
 
@@ -216,17 +287,46 @@ const ManageEmployees = () => {
                     <td className="py-3 px-2">{employee.department}</td>
                     <td className="py-3 px-2">
                       <div className="flex items-center gap-2">
-                        <Button size="sm" variant="outline">
-                          <Edit className="w-4 h-4" />
+                        <Button 
+                          size="sm" 
+                          variant="outline"
+                          onClick={() => handleViewEmployee(employee)}
+                          className="text-blue-600 hover:text-blue-700"
+                        >
+                          <Eye className="w-4 h-4" />
                         </Button>
                         <Button 
                           size="sm" 
-                          variant="outline" 
-                          onClick={() => handleDeleteEmployee(employee.id)}
-                          className="text-red-600 hover:text-red-700"
+                          variant="outline"
+                          onClick={() => handleEditEmployee(employee)}
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Edit className="w-4 h-4" />
                         </Button>
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button 
+                              size="sm" 
+                              variant="outline" 
+                              className="text-red-600 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>Delete Employee</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                Are you sure you want to delete {employee.name}? This action cannot be undone and will remove their login credentials.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>Cancel</AlertDialogCancel>
+                              <AlertDialogAction onClick={() => handleDeleteEmployee(employee.id)}>
+                                Delete
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </div>
                     </td>
                   </tr>
@@ -266,6 +366,32 @@ const ManageEmployees = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* View Employee Modal */}
+      <Dialog open={isViewModalOpen} onOpenChange={setIsViewModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle>Employee Details - {selectedEmployee?.name}</DialogTitle>
+          </DialogHeader>
+          {selectedEmployee && <EmployeeDetailsView employee={selectedEmployee} />}
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Employee Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-hidden">
+          <DialogHeader>
+            <DialogTitle>Edit Employee - {selectedEmployee?.name}</DialogTitle>
+          </DialogHeader>
+          {selectedEmployee && (
+            <AddEmployeeForm 
+              onSubmit={handleUpdateEmployee}
+              onCancel={() => setIsEditModalOpen(false)}
+              initialData={selectedEmployee}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

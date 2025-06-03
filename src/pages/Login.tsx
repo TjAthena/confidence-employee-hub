@@ -6,13 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Users } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import ForgotPasswordDialog from '@/components/ForgotPasswordDialog';
 
 const Login = () => {
   const [credentials, setCredentials] = useState({ id: '', password: '' });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isForgotPasswordOpen, setIsForgotPasswordOpen] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -56,40 +59,27 @@ const Login = () => {
     <div className="min-h-screen flex bg-gradient-to-br from-pink-400 via-purple-500 to-indigo-600">
       {/* Left Side - Illustration */}
       <div className="hidden lg:flex flex-1 items-center justify-center p-12">
-        <div className="max-w-md text-white">
+        <div className="max-w-md text-white text-center">
           <div className="mb-8">
             <img 
-              src="/lovable-uploads/3adc0623-9d8c-4697-960c-98ba3ac3e044.png" 
+              src="/lovable-uploads/4a4bd754-01b7-47fe-9c4f-f9b35a12cf3a.png" 
               alt="Confidence Financial Services" 
-              className="w-16 h-16 bg-white rounded-full p-2 mb-6"
+              className="w-32 h-32 mx-auto mb-6"
             />
-            <h2 className="text-3xl font-bold mb-4">CONFIDENCE</h2>
-            <h3 className="text-2xl font-semibold mb-6">FINANCIAL SERVICES</h3>
-            <div className="bg-green-500 text-white px-4 py-2 rounded text-sm font-medium inline-block mb-4">
-              ₹Protection ₹Security ₹Freedom
-            </div>
           </div>
           
-          {/* Illustration Icons */}
-          <div className="space-y-4 opacity-80">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <span className="text-lg">💰</span>
-              </div>
-              <span>Financial Protection</span>
+          {/* Abstract Design */}
+          <div className="space-y-6 opacity-80">
+            <div className="flex justify-center space-x-4">
+              <div className="w-20 h-20 bg-white bg-opacity-20 rounded-full animate-pulse"></div>
+              <div className="w-16 h-16 bg-white bg-opacity-30 rounded-full animate-pulse delay-100"></div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <span className="text-lg">🏠</span>
-              </div>
-              <span>Secure Investments</span>
+            <div className="flex justify-center space-x-3">
+              <div className="w-12 h-12 bg-white bg-opacity-25 rounded-full animate-bounce"></div>
+              <div className="w-14 h-14 bg-white bg-opacity-20 rounded-full animate-bounce delay-200"></div>
+              <div className="w-10 h-10 bg-white bg-opacity-30 rounded-full animate-bounce delay-300"></div>
             </div>
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-white bg-opacity-20 rounded-full flex items-center justify-center">
-                <span className="text-lg">⚕️</span>
-              </div>
-              <span>Health Insurance</span>
-            </div>
+            <div className="h-32 w-full bg-gradient-to-r from-transparent via-white to-transparent opacity-20 rounded-lg"></div>
           </div>
         </div>
       </div>
@@ -100,12 +90,10 @@ const Login = () => {
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <img 
-              src="/lovable-uploads/3adc0623-9d8c-4697-960c-98ba3ac3e044.png" 
+              src="/lovable-uploads/4a4bd754-01b7-47fe-9c4f-f9b35a12cf3a.png" 
               alt="Confidence Financial Services" 
-              className="w-16 h-16 bg-white rounded-full p-2 mx-auto mb-4"
+              className="w-24 h-24 mx-auto mb-4"
             />
-            <h1 className="text-2xl font-bold text-white mb-2">CONFIDENCE</h1>
-            <h2 className="text-xl font-semibold text-white">FINANCIAL SERVICES</h2>
           </div>
 
           <Card className="bg-white bg-opacity-95 backdrop-blur-sm shadow-2xl border-0">
@@ -160,12 +148,22 @@ const Login = () => {
                 </Button>
 
                 <div className="text-center">
-                  <button 
-                    type="button" 
-                    className="text-purple-600 hover:text-purple-700 text-sm font-medium"
-                  >
-                    Forgot Password?
-                  </button>
+                  <Dialog open={isForgotPasswordOpen} onOpenChange={setIsForgotPasswordOpen}>
+                    <DialogTrigger asChild>
+                      <button 
+                        type="button" 
+                        className="text-purple-600 hover:text-purple-700 text-sm font-medium"
+                      >
+                        Forgot Password?
+                      </button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Reset Password</DialogTitle>
+                      </DialogHeader>
+                      <ForgotPasswordDialog onClose={() => setIsForgotPasswordOpen(false)} />
+                    </DialogContent>
+                  </Dialog>
                 </div>
               </form>
 
