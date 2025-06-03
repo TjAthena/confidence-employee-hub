@@ -1,23 +1,27 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar } from '@/components/ui/calendar';
+import { CalendarIcon } from 'lucide-react';
+import { format } from 'date-fns';
+import { cn } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 import { Upload, X } from 'lucide-react';
 
 interface AddEmployeeFormProps {
   onSubmit: (data: any) => void;
   onCancel: () => void;
-  initialData?: any;
-  isEdit?: boolean;
 }
 
-const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel, initialData, isEdit = false }) => {
+const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
-    // Login Credentials (only for new employees)
+    // Login Credentials
     employeeId: '',
     password: '',
     
@@ -27,7 +31,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel, i
     email: '',
     phoneNumber: '',
     alternatePhoneNumber: '',
-    dateOfBirth: '',
+    dateOfBirth: null as Date | null,
     gender: '',
     maritalStatus: '',
     nationality: 'Indian',
@@ -91,70 +95,6 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel, i
   });
 
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialData && isEdit) {
-      // Populate form with existing employee data for editing
-      setFormData({
-        employeeId: initialData.id || '',
-        password: '', // Don't populate password for edit
-        firstName: initialData.name?.split(' ')[0] || '',
-        lastName: initialData.name?.split(' ').slice(1).join(' ') || '',
-        email: initialData.email || '',
-        phoneNumber: initialData.phone || '',
-        alternatePhoneNumber: '',
-        dateOfBirth: '',
-        gender: '',
-        maritalStatus: '',
-        nationality: 'Indian',
-        aadhaarNumber: '',
-        panNumber: '',
-        permanentAddress: {
-          street: '',
-          city: '',
-          state: '',
-          pincode: '',
-          country: 'India'
-        },
-        currentAddress: {
-          street: '',
-          city: '',
-          state: '',
-          pincode: '',
-          country: 'India'
-        },
-        sameAsPermanent: false,
-        bankName: initialData.bankDetails?.bankName || '',
-        branchName: '',
-        ifscCode: initialData.bankDetails?.ifsc || '',
-        accountNumber: initialData.bankDetails?.accountNumber || '',
-        accountType: '',
-        degree: initialData.education?.degree || '',
-        institute: initialData.education?.institute || '',
-        graduationYear: initialData.education?.year || '',
-        emergencyContactName: initialData.emergencyContact?.name || '',
-        emergencyContactRelationship: initialData.emergencyContact?.relationship || '',
-        emergencyContactPhone: initialData.emergencyContact?.phone || '',
-        emergencyContactAddress: '',
-        department: initialData.department || '',
-        designation: initialData.role || '',
-        annualCtc: initialData.salary?.annual?.toString() || '',
-        monthlyCtc: initialData.salary?.monthly?.toString() || '',
-        basicMonthly: initialData.salary?.breakdown?.basic?.toString() || '',
-        hraMonthly: initialData.salary?.breakdown?.hra?.toString() || '',
-        conveyanceMonthly: initialData.salary?.breakdown?.conveyance?.toString() || '',
-        medicalMonthly: initialData.salary?.breakdown?.medical?.toString() || '',
-        pfMonthly: initialData.salary?.breakdown?.pf?.toString() || '',
-        otherMonthly: initialData.salary?.breakdown?.other?.toString() || '',
-        incentives: initialData.salary?.breakdown?.incentives?.toString() || '',
-        profilePhoto: null
-      });
-      
-      if (initialData.photo) {
-        setPhotoPreview(initialData.photo);
-      }
-    }
-  }, [initialData, isEdit]);
 
   const calculateAnnualBreakdown = () => {
     const monthly = {
@@ -244,26 +184,13 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel, i
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isEdit) {
-      // Validation for new employee
-      if (!formData.employeeId || !formData.password || !formData.firstName || !formData.lastName || !formData.email) {
-        toast({
-          title: "Error",
-          description: "Please fill in all required fields",
-          variant: "destructive"
-        });
-        return;
-      }
-    } else {
-      // Minimal validation for edit
-      if (!formData.firstName || !formData.lastName || !formData.email) {
-        toast({
-          title: "Error",
-          description: "Name and email are required",
-          variant: "destructive"
-        });
-        return;
-      }
+    if (!formData.employeeId || !formData.password || !formData.firstName || !formData.lastName || !formData.email) {
+      toast({
+        title: "Error",
+        description: "Please fill in all required fields",
+        variant: "destructive"
+      });
+      return;
     }
 
     const annual = calculateAnnualBreakdown();
@@ -277,7 +204,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel, i
     
     toast({
       title: "Success",
-      description: isEdit ? "Employee updated successfully" : "Employee added successfully"
+      description: "Employee added successfully"
     });
   };
 
@@ -331,37 +258,35 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel, i
           </CardContent>
         </Card>
 
-        {/* Login Credentials - Only for new employees */}
-        {!isEdit && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Login Credentials</CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="employeeId">Employee ID *</Label>
-                <Input
-                  id="employeeId"
-                  value={formData.employeeId}
-                  onChange={(e) => handleInputChange('employeeId', e.target.value)}
-                  placeholder="Enter Employee ID"
-                  required
-                />
-              </div>
-              <div>
-                <Label htmlFor="password">Password *</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={formData.password}
-                  onChange={(e) => handleInputChange('password', e.target.value)}
-                  placeholder="Enter Password"
-                  required
-                />
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {/* Login Credentials */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Login Credentials</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label htmlFor="employeeId">Employee ID *</Label>
+              <Input
+                id="employeeId"
+                value={formData.employeeId}
+                onChange={(e) => handleInputChange('employeeId', e.target.value)}
+                placeholder="Enter Employee ID"
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="password">Password *</Label>
+              <Input
+                id="password"
+                type="password"
+                value={formData.password}
+                onChange={(e) => handleInputChange('password', e.target.value)}
+                placeholder="Enter Password"
+                required
+              />
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Personal Information */}
         <Card>
@@ -852,6 +777,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel, i
                   onChange={(e) => handleInputChange('incentives', e.target.value)}
                   placeholder="Enter Monthly Incentives"
                 />
+                <p className="text-xs text-gray-500 mt-1">Incentives are added separately to monthly salary</p>
               </div>
             </div>
           </CardContent>
@@ -863,7 +789,7 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel, i
             Cancel
           </Button>
           <Button type="submit" className="flex-1">
-            {isEdit ? 'Save Changes' : 'Add Employee'}
+            Add Employee
           </Button>
         </div>
       </form>

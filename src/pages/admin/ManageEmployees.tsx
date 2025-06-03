@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Users, Plus, Edit, Trash2, Search, Upload, Eye } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import AddEmployeeForm from '@/components/forms/AddEmployeeForm';
+import EditEmployeeForm from '@/components/forms/EditEmployeeForm';
 import EmployeeDetailsView from '@/components/EmployeeDetailsView';
 import { Link } from 'react-router-dom';
 
@@ -68,7 +70,36 @@ const ManageEmployees = () => {
       role: 'HR Manager',
       department: 'Human Resources',
       email: 'priya.sharma@confidencefs.com',
-      joinDate: '2021-08-10'
+      joinDate: '2021-08-10',
+      phone: '+91 9876543211',
+      salary: {
+        annual: 700000,
+        monthly: 58333,
+        breakdown: {
+          basic: 25000,
+          hra: 12500,
+          conveyance: 4000,
+          medical: 2000,
+          pf: 3000,
+          incentives: 6000,
+          other: 5833
+        }
+      },
+      bankDetails: {
+        bankName: 'HDFC Bank',
+        accountNumber: '12345678902',
+        ifsc: 'HDFC0001234'
+      },
+      education: {
+        degree: 'MBA HR',
+        institute: 'Mumbai University',
+        year: '2019'
+      },
+      emergencyContact: {
+        name: 'Raj Sharma',
+        relationship: 'Father',
+        phone: '+91 9876543212'
+      }
     },
     {
       id: 'EMP003',
@@ -77,7 +108,36 @@ const ManageEmployees = () => {
       role: 'Software Developer',
       department: 'Technology',
       email: 'rahul.patel@confidencefs.com',
-      joinDate: '2023-01-20'
+      joinDate: '2023-01-20',
+      phone: '+91 9876543212',
+      salary: {
+        annual: 900000,
+        monthly: 75000,
+        breakdown: {
+          basic: 35000,
+          hra: 17500,
+          conveyance: 6000,
+          medical: 2500,
+          pf: 4200,
+          incentives: 10000,
+          other: -200
+        }
+      },
+      bankDetails: {
+        bankName: 'ICICI Bank',
+        accountNumber: '12345678903',
+        ifsc: 'ICIC0001234'
+      },
+      education: {
+        degree: 'B.Tech Computer Science',
+        institute: 'IIT Delhi',
+        year: '2022'
+      },
+      emergencyContact: {
+        name: 'Meera Patel',
+        relationship: 'Mother',
+        phone: '+91 9876543213'
+      }
     },
     {
       id: 'EMP004',
@@ -86,19 +146,38 @@ const ManageEmployees = () => {
       role: 'Marketing Specialist',
       department: 'Marketing',
       email: 'anita.kumar@confidencefs.com',
-      joinDate: '2022-11-05'
+      joinDate: '2022-11-05',
+      phone: '+91 9876543213',
+      salary: {
+        annual: 600000,
+        monthly: 50000,
+        breakdown: {
+          basic: 22000,
+          hra: 11000,
+          conveyance: 3500,
+          medical: 1500,
+          pf: 2640,
+          incentives: 5000,
+          other: 4360
+        }
+      },
+      bankDetails: {
+        bankName: 'Axis Bank',
+        accountNumber: '12345678904',
+        ifsc: 'UTIB0001234'
+      },
+      education: {
+        degree: 'MBA Marketing',
+        institute: 'Pune University',
+        year: '2021'
+      },
+      emergencyContact: {
+        name: 'Suresh Kumar',
+        relationship: 'Father',
+        phone: '+91 9876543214'
+      }
     }
   ]);
-
-  const [newEmployee, setNewEmployee] = useState({
-    name: '',
-    email: '',
-    role: '',
-    department: '',
-    salary: '',
-    phone: '',
-    address: ''
-  });
 
   const filteredEmployees = employees.filter(employee => {
     const matchesSearch = employee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -111,11 +190,6 @@ const ManageEmployees = () => {
   const totalPages = Math.ceil(filteredEmployees.length / employeesPerPage);
   const startIndex = (currentPage - 1) * employeesPerPage;
   const paginatedEmployees = filteredEmployees.slice(startIndex, startIndex + employeesPerPage);
-
-  const generateEmployeeId = () => {
-    const nextId = employees.length + 1;
-    return `EMP${nextId.toString().padStart(3, '0')}`;
-  };
 
   const handleAddEmployee = (employeeData: any) => {
     const employee = {
@@ -194,6 +268,7 @@ const ManageEmployees = () => {
             role: updatedData.designation,
             department: updatedData.department,
             salary: {
+              ...emp.salary,
               annual: parseInt(updatedData.annualCtc) || emp.salary.annual,
               monthly: parseInt(updatedData.monthlyCtc) || emp.salary.monthly,
               breakdown: {
@@ -424,11 +499,10 @@ const ManageEmployees = () => {
             <DialogTitle>Edit Employee - {selectedEmployee?.name}</DialogTitle>
           </DialogHeader>
           {selectedEmployee && (
-            <AddEmployeeForm 
+            <EditEmployeeForm 
               onSubmit={handleUpdateEmployee}
               onCancel={() => setIsEditModalOpen(false)}
               initialData={selectedEmployee}
-              isEdit={true}
             />
           )}
         </DialogContent>
