@@ -9,7 +9,8 @@ import {
   Megaphone, 
   User, 
   LogOut,
-  Upload
+  Upload,
+  FileText
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -23,8 +24,9 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
   const adminNavItems = [
     { to: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
     { to: '/admin/employees', icon: Users, label: 'Manage Employees' },
-    { to: '/admin/announcements', icon: Megaphone, label: 'Announcements' },
+    { to: '/admin/generate-document', icon: FileText, label: 'Generate Document' },
     { to: '/admin/document-upload', icon: Upload, label: 'Document Upload' },
+    { to: '/admin/announcements', icon: Megaphone, label: 'Announcements' },
   ];
 
   const employeeNavItems = [
@@ -60,7 +62,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 p-2 sm:p-4 space-y-2">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = location.pathname === item.to;
@@ -75,15 +77,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
                   : 'text-gray-700 hover:bg-gray-100'
               }`}
             >
-              <Icon className="w-5 h-5" />
-              {!isCollapsed && <span className="font-medium">{item.label}</span>}
+              <Icon className="w-5 h-5 flex-shrink-0" />
+              {!isCollapsed && <span className="font-medium text-sm sm:text-base">{item.label}</span>}
             </Link>
           );
         })}
       </nav>
 
       {/* User Profile & Logout */}
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-2 sm:p-4 border-t border-gray-200">
         {!isCollapsed && (
           <div className="mb-3 p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center gap-3">
@@ -91,10 +93,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
                 <img 
                   src={user.photo} 
                   alt={user.name} 
-                  className="w-8 h-8 rounded-full object-cover"
+                  className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                 />
               ) : (
-                <div className="w-8 h-8 bg-blue-accent rounded-full flex items-center justify-center">
+                <div className="w-8 h-8 bg-blue-accent rounded-full flex items-center justify-center flex-shrink-0">
                   <User className="w-4 h-4 text-white" />
                 </div>
               )}
@@ -113,7 +115,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed }) => {
             isCollapsed ? 'px-3' : ''
           }`}
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-5 h-5 flex-shrink-0" />
           {!isCollapsed && <span className="ml-3">Logout</span>}
         </Button>
       </div>

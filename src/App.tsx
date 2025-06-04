@@ -12,6 +12,7 @@ import EmployeeProfile from "./pages/employee/Profile";
 import EmployeeAnnouncements from "./pages/employee/Announcements";
 import AdminDashboard from "./pages/admin/Dashboard";
 import ManageEmployees from "./pages/admin/ManageEmployees";
+import GenerateDocument from "./pages/admin/GenerateDocument";
 import AdminAnnouncements from "./pages/admin/Announcements";
 import DocumentUpload from "./pages/admin/DocumentUpload";
 import NotFound from "./pages/NotFound";
@@ -39,8 +40,9 @@ const App = () => (
             <Route path="/admin" element={<AdminLayout />}>
               <Route path="dashboard" element={<AdminDashboard />} />
               <Route path="employees" element={<ManageEmployees />} />
-              <Route path="announcements" element={<AdminAnnouncements />} />
+              <Route path="generate-document" element={<GenerateDocument />} />
               <Route path="document-upload" element={<DocumentUpload />} />
+              <Route path="announcements" element={<AdminAnnouncements />} />
             </Route>
             
             <Route path="*" element={<NotFound />} />

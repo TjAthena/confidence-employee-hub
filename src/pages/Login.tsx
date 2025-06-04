@@ -64,7 +64,7 @@ const Login = () => {
             <img 
               src="/lovable-uploads/4cd0f138-e865-4e5d-b5f5-d130269dc53d.png" 
               alt="Confidence Financial Services" 
-              className="w-32 h-32 mx-auto mb-6 rounded-full object-cover border-4 border-white border-opacity-30"
+              className="w-[300px] h-[300px] mx-auto mb-6 rounded-full object-cover border-4 border-white border-opacity-30"
             />
           </div>
           
@@ -85,25 +85,25 @@ const Login = () => {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="flex-1 flex items-center justify-center p-8">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-8">
         <div className="w-full max-w-md">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <img 
               src="/lovable-uploads/4cd0f138-e865-4e5d-b5f5-d130269dc53d.png" 
               alt="Confidence Financial Services" 
-              className="w-24 h-24 mx-auto mb-4 rounded-full object-cover border-4 border-white border-opacity-30"
+              className="w-32 h-32 sm:w-40 sm:h-40 mx-auto mb-4 rounded-full object-cover border-4 border-white border-opacity-30"
             />
           </div>
 
           <Card className="bg-white bg-opacity-95 backdrop-blur-sm shadow-2xl border-0">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl font-bold text-gray-800">Sign In</CardTitle>
+              <CardTitle className="text-xl sm:text-2xl font-bold text-gray-800">Sign In</CardTitle>
               <CardDescription className="text-gray-600">
                 Enter your credentials to access your account
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-4 sm:p-6">
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="id" className="block text-sm font-medium text-gray-700 mb-2">
@@ -168,22 +168,22 @@ const Login = () => {
               </form>
 
               {/* Demo Credentials */}
-              <div className="mt-6 p-4 bg-gray-50 rounded-lg border">
+              <div className="mt-6 p-3 sm:p-4 bg-gray-50 rounded-lg border">
                 <p className="text-sm font-medium text-gray-700 mb-3 text-center">Demo Credentials:</p>
                 <div className="space-y-2 text-xs">
-                  <div className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded border gap-2">
                     <div className="flex items-center gap-2">
                       <Users className="w-3 h-3 text-blue-600" />
                       <span className="font-medium text-blue-600">Admin:</span>
                     </div>
-                    <span className="text-gray-600">ID: admin001, Password: admin123</span>
+                    <span className="text-gray-600 text-center">ID: admin001, Password: admin123</span>
                   </div>
-                  <div className="flex items-center justify-between p-2 bg-white rounded border">
+                  <div className="flex flex-col sm:flex-row items-center justify-between p-2 bg-white rounded border gap-2">
                     <div className="flex items-center gap-2">
                       <Users className="w-3 h-3 text-green-600" />
                       <span className="font-medium text-green-600">Employee:</span>
                     </div>
-                    <span className="text-gray-600">ID: emp001, Password: emp123</span>
+                    <span className="text-gray-600 text-center">ID: emp001, Password: emp123</span>
                   </div>
                 </div>
               </div>
