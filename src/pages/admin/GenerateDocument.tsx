@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
 import { FileText, Download } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
@@ -25,12 +24,24 @@ const GenerateDocument = () => {
     address: '',
     companyName: 'Confidence Financial Services',
     companyAddress: '123 Business District, Mumbai, Maharashtra 400001',
-    additionalDetails: '',
     // Offer Letter specific fields
     issuedDate: '',
     candidateName: '',
     positionOffered: '',
-    annualCtc: ''
+    annualCtc: '',
+    // Payslip specific fields
+    payslipMonth: '',
+    payslipYear: '',
+    totalWorkingDays: '',
+    presentDays: '',
+    leaveDays: '',
+    lopDays: '',
+    bonuses: '',
+    providentFund: '',
+    professionalTax: '',
+    mediclaim: '',
+    incomeTax: '',
+    termInsurance: ''
   });
 
   const documentTypes = [
@@ -84,7 +95,7 @@ const GenerateDocument = () => {
       case 'appointment-letter':
         return ['employeeName', 'employeeId', 'designation', 'department', 'joiningDate', 'reportingManager'];
       case 'payslip':
-        return ['employeeName', 'employeeId', 'designation', 'department', 'compensation'];
+        return ['employeeId', 'payslipMonth', 'payslipYear', 'totalWorkingDays', 'presentDays', 'leaveDays', 'lopDays', 'bonuses', 'providentFund', 'professionalTax', 'mediclaim', 'incomeTax', 'termInsurance'];
       default:
         return [];
     }
@@ -243,18 +254,6 @@ const GenerateDocument = () => {
     <div className="space-y-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="employeeName">
-            Employee Name <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="employeeName"
-            value={formData.employeeName}
-            onChange={(e) => handleInputChange('employeeName', e.target.value)}
-            placeholder="Enter employee name"
-          />
-        </div>
-
-        <div>
           <Label htmlFor="employeeId">
             Employee ID <span className="text-red-500">*</span>
           </Label>
@@ -267,38 +266,171 @@ const GenerateDocument = () => {
         </div>
 
         <div>
-          <Label htmlFor="designation">
-            Designation <span className="text-red-500">*</span>
+          <Label htmlFor="payslipMonth">
+            Payslip Month <span className="text-red-500">*</span>
+          </Label>
+          <Select value={formData.payslipMonth} onValueChange={(value) => handleInputChange('payslipMonth', value)}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select month" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="01">January</SelectItem>
+              <SelectItem value="02">February</SelectItem>
+              <SelectItem value="03">March</SelectItem>
+              <SelectItem value="04">April</SelectItem>
+              <SelectItem value="05">May</SelectItem>
+              <SelectItem value="06">June</SelectItem>
+              <SelectItem value="07">July</SelectItem>
+              <SelectItem value="08">August</SelectItem>
+              <SelectItem value="09">September</SelectItem>
+              <SelectItem value="10">October</SelectItem>
+              <SelectItem value="11">November</SelectItem>
+              <SelectItem value="12">December</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div>
+          <Label htmlFor="payslipYear">
+            Payslip Year <span className="text-red-500">*</span>
           </Label>
           <Input
-            id="designation"
-            value={formData.designation}
-            onChange={(e) => handleInputChange('designation', e.target.value)}
-            placeholder="Enter designation"
+            id="payslipYear"
+            value={formData.payslipYear}
+            onChange={(e) => handleInputChange('payslipYear', e.target.value)}
+            placeholder="Enter year (e.g., 2024)"
+            type="number"
+            min="2020"
+            max="2030"
           />
         </div>
 
         <div>
-          <Label htmlFor="department">
-            Department <span className="text-red-500">*</span>
+          <Label htmlFor="totalWorkingDays">
+            Total Working Days <span className="text-red-500">*</span>
           </Label>
           <Input
-            id="department"
-            value={formData.department}
-            onChange={(e) => handleInputChange('department', e.target.value)}
-            placeholder="Enter department"
+            id="totalWorkingDays"
+            value={formData.totalWorkingDays}
+            onChange={(e) => handleInputChange('totalWorkingDays', e.target.value)}
+            placeholder="Enter total working days"
+            type="number"
           />
         </div>
 
         <div>
-          <Label htmlFor="compensation">
-            Monthly Compensation <span className="text-red-500">*</span>
+          <Label htmlFor="presentDays">
+            Present Days <span className="text-red-500">*</span>
           </Label>
           <Input
-            id="compensation"
-            value={formData.compensation}
-            onChange={(e) => handleInputChange('compensation', e.target.value)}
-            placeholder="Enter compensation amount"
+            id="presentDays"
+            value={formData.presentDays}
+            onChange={(e) => handleInputChange('presentDays', e.target.value)}
+            placeholder="Enter present days"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="leaveDays">
+            Leave Days <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="leaveDays"
+            value={formData.leaveDays}
+            onChange={(e) => handleInputChange('leaveDays', e.target.value)}
+            placeholder="Enter leave days"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="lopDays">
+            LOP Days (Loss of Pay) <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="lopDays"
+            value={formData.lopDays}
+            onChange={(e) => handleInputChange('lopDays', e.target.value)}
+            placeholder="Enter LOP days"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="bonuses">
+            Bonuses/Incentives <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="bonuses"
+            value={formData.bonuses}
+            onChange={(e) => handleInputChange('bonuses', e.target.value)}
+            placeholder="Enter bonus amount"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="providentFund">
+            Provident Fund <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="providentFund"
+            value={formData.providentFund}
+            onChange={(e) => handleInputChange('providentFund', e.target.value)}
+            placeholder="Enter PF amount"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="professionalTax">
+            Professional Tax <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="professionalTax"
+            value={formData.professionalTax}
+            onChange={(e) => handleInputChange('professionalTax', e.target.value)}
+            placeholder="Enter professional tax"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="mediclaim">
+            Mediclaim <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="mediclaim"
+            value={formData.mediclaim}
+            onChange={(e) => handleInputChange('mediclaim', e.target.value)}
+            placeholder="Enter mediclaim amount"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="incomeTax">
+            Income Tax <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="incomeTax"
+            value={formData.incomeTax}
+            onChange={(e) => handleInputChange('incomeTax', e.target.value)}
+            placeholder="Enter income tax"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="termInsurance">
+            Term Insurance <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="termInsurance"
+            value={formData.termInsurance}
+            onChange={(e) => handleInputChange('termInsurance', e.target.value)}
+            placeholder="Enter term insurance"
             type="number"
           />
         </div>
@@ -367,17 +499,6 @@ const GenerateDocument = () => {
             ) : (
               <div className="space-y-4">
                 {renderFormBasedOnType()}
-
-                <div>
-                  <Label htmlFor="additionalDetails">Additional Details</Label>
-                  <Textarea
-                    id="additionalDetails"
-                    value={formData.additionalDetails}
-                    onChange={(e) => handleInputChange('additionalDetails', e.target.value)}
-                    placeholder="Enter any additional details"
-                    rows={3}
-                  />
-                </div>
 
                 <div className="flex justify-end pt-4">
                   <Button onClick={handleGenerateDocument} className="flex items-center gap-2">
