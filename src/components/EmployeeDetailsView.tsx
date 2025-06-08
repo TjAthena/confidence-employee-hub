@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -126,13 +125,13 @@ const EmployeeDetailsView: React.FC<EmployeeDetailsViewProps> = ({ employee }) =
         </CardContent>
       </Card>
 
-      {/* Salary Information */}
+      {/* Compensation Information */}
       {employee.salary && (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <CreditCard className="w-5 h-5" />
-              Salary Information
+              Compensation Information
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -148,7 +147,7 @@ const EmployeeDetailsView: React.FC<EmployeeDetailsViewProps> = ({ employee }) =
             </div>
             
             <div className="mt-6">
-              <h4 className="font-medium mb-3">Salary Breakdown (Monthly)</h4>
+              <h4 className="font-medium mb-3">Compensation Breakdown (Monthly)</h4>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
                 <div className="p-3 bg-gray-50 rounded">
                   <p className="text-gray-600">Basic</p>

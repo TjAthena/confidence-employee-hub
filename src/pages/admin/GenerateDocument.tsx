@@ -16,7 +16,7 @@ const GenerateDocument = () => {
     employeeId: '',
     designation: '',
     department: '',
-    salary: '',
+    compensation: '',
     joiningDate: '',
     workLocation: '',
     reportingManager: '',
@@ -25,7 +25,12 @@ const GenerateDocument = () => {
     address: '',
     companyName: 'Confidence Financial Services',
     companyAddress: '123 Business District, Mumbai, Maharashtra 400001',
-    additionalDetails: ''
+    additionalDetails: '',
+    // Offer Letter specific fields
+    issuedDate: '',
+    candidateName: '',
+    positionOffered: '',
+    annualCtc: ''
   });
 
   const documentTypes = [
@@ -51,10 +56,14 @@ const GenerateDocument = () => {
       return;
     }
 
-    if (!formData.employeeName || !formData.employeeId) {
+    // Validate required fields based on document type
+    const requiredFields = getRequiredFields();
+    const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
+    
+    if (missingFields.length > 0) {
       toast({
         title: "Error",
-        description: "Please fill in required fields",
+        description: "Please fill in all required fields",
         variant: "destructive"
       });
       return;
@@ -71,11 +80,11 @@ const GenerateDocument = () => {
   const getRequiredFields = () => {
     switch (documentType) {
       case 'offer-letter':
-        return ['employeeName', 'designation', 'department', 'salary', 'joiningDate', 'workLocation'];
+        return ['issuedDate', 'candidateName', 'positionOffered', 'annualCtc', 'workLocation'];
       case 'appointment-letter':
         return ['employeeName', 'employeeId', 'designation', 'department', 'joiningDate', 'reportingManager'];
       case 'payslip':
-        return ['employeeName', 'employeeId', 'designation', 'department', 'salary'];
+        return ['employeeName', 'employeeId', 'designation', 'department', 'compensation'];
       default:
         return [];
     }
@@ -83,6 +92,231 @@ const GenerateDocument = () => {
 
   const isFieldRequired = (field: string) => {
     return getRequiredFields().includes(field);
+  };
+
+  const renderOfferLetterForm = () => (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="issuedDate">
+            Issued Date <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="issuedDate"
+            value={formData.issuedDate}
+            onChange={(e) => handleInputChange('issuedDate', e.target.value)}
+            type="date"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="candidateName">
+            Candidate Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="candidateName"
+            value={formData.candidateName}
+            onChange={(e) => handleInputChange('candidateName', e.target.value)}
+            placeholder="Enter candidate name"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="positionOffered">
+            Position Offered/Designation <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="positionOffered"
+            value={formData.positionOffered}
+            onChange={(e) => handleInputChange('positionOffered', e.target.value)}
+            placeholder="Enter position offered"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="annualCtc">
+            Annual CTC <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="annualCtc"
+            value={formData.annualCtc}
+            onChange={(e) => handleInputChange('annualCtc', e.target.value)}
+            placeholder="Enter annual CTC amount"
+            type="number"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="workLocation">
+            Work Location <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="workLocation"
+            value={formData.workLocation}
+            onChange={(e) => handleInputChange('workLocation', e.target.value)}
+            placeholder="Enter work location"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderAppointmentLetterForm = () => (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="employeeName">
+            Employee Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="employeeName"
+            value={formData.employeeName}
+            onChange={(e) => handleInputChange('employeeName', e.target.value)}
+            placeholder="Enter employee name"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="employeeId">
+            Employee ID <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="employeeId"
+            value={formData.employeeId}
+            onChange={(e) => handleInputChange('employeeId', e.target.value)}
+            placeholder="Enter employee ID"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="designation">
+            Designation <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="designation"
+            value={formData.designation}
+            onChange={(e) => handleInputChange('designation', e.target.value)}
+            placeholder="Enter designation"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="department">
+            Department <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="department"
+            value={formData.department}
+            onChange={(e) => handleInputChange('department', e.target.value)}
+            placeholder="Enter department"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="joiningDate">
+            Joining Date <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="joiningDate"
+            value={formData.joiningDate}
+            onChange={(e) => handleInputChange('joiningDate', e.target.value)}
+            type="date"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="reportingManager">
+            Reporting Manager <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="reportingManager"
+            value={formData.reportingManager}
+            onChange={(e) => handleInputChange('reportingManager', e.target.value)}
+            placeholder="Enter reporting manager"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderPayslipForm = () => (
+    <div className="space-y-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Label htmlFor="employeeName">
+            Employee Name <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="employeeName"
+            value={formData.employeeName}
+            onChange={(e) => handleInputChange('employeeName', e.target.value)}
+            placeholder="Enter employee name"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="employeeId">
+            Employee ID <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="employeeId"
+            value={formData.employeeId}
+            onChange={(e) => handleInputChange('employeeId', e.target.value)}
+            placeholder="Enter employee ID"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="designation">
+            Designation <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="designation"
+            value={formData.designation}
+            onChange={(e) => handleInputChange('designation', e.target.value)}
+            placeholder="Enter designation"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="department">
+            Department <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="department"
+            value={formData.department}
+            onChange={(e) => handleInputChange('department', e.target.value)}
+            placeholder="Enter department"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="compensation">
+            Monthly Compensation <span className="text-red-500">*</span>
+          </Label>
+          <Input
+            id="compensation"
+            value={formData.compensation}
+            onChange={(e) => handleInputChange('compensation', e.target.value)}
+            placeholder="Enter compensation amount"
+            type="number"
+          />
+        </div>
+      </div>
+    </div>
+  );
+
+  const renderFormBasedOnType = () => {
+    switch (documentType) {
+      case 'offer-letter':
+        return renderOfferLetterForm();
+      case 'appointment-letter':
+        return renderAppointmentLetterForm();
+      case 'payslip':
+        return renderPayslipForm();
+      default:
+        return null;
+    }
   };
 
   return (
@@ -132,144 +366,7 @@ const GenerateDocument = () => {
               </div>
             ) : (
               <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="employeeName">
-                      Employee Name {isFieldRequired('employeeName') && <span className="text-red-500">*</span>}
-                    </Label>
-                    <Input
-                      id="employeeName"
-                      value={formData.employeeName}
-                      onChange={(e) => handleInputChange('employeeName', e.target.value)}
-                      placeholder="Enter employee name"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="employeeId">
-                      Employee ID {isFieldRequired('employeeId') && <span className="text-red-500">*</span>}
-                    </Label>
-                    <Input
-                      id="employeeId"
-                      value={formData.employeeId}
-                      onChange={(e) => handleInputChange('employeeId', e.target.value)}
-                      placeholder="Enter employee ID"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="designation">
-                      Designation {isFieldRequired('designation') && <span className="text-red-500">*</span>}
-                    </Label>
-                    <Input
-                      id="designation"
-                      value={formData.designation}
-                      onChange={(e) => handleInputChange('designation', e.target.value)}
-                      placeholder="Enter designation"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="department">
-                      Department {isFieldRequired('department') && <span className="text-red-500">*</span>}
-                    </Label>
-                    <Input
-                      id="department"
-                      value={formData.department}
-                      onChange={(e) => handleInputChange('department', e.target.value)}
-                      placeholder="Enter department"
-                    />
-                  </div>
-
-                  {(documentType === 'offer-letter' || documentType === 'payslip') && (
-                    <div>
-                      <Label htmlFor="salary">
-                        Salary {isFieldRequired('salary') && <span className="text-red-500">*</span>}
-                      </Label>
-                      <Input
-                        id="salary"
-                        value={formData.salary}
-                        onChange={(e) => handleInputChange('salary', e.target.value)}
-                        placeholder="Enter salary amount"
-                        type="number"
-                      />
-                    </div>
-                  )}
-
-                  {(documentType === 'offer-letter' || documentType === 'appointment-letter') && (
-                    <div>
-                      <Label htmlFor="joiningDate">
-                        Joining Date {isFieldRequired('joiningDate') && <span className="text-red-500">*</span>}
-                      </Label>
-                      <Input
-                        id="joiningDate"
-                        value={formData.joiningDate}
-                        onChange={(e) => handleInputChange('joiningDate', e.target.value)}
-                        type="date"
-                      />
-                    </div>
-                  )}
-
-                  {documentType === 'offer-letter' && (
-                    <div>
-                      <Label htmlFor="workLocation">
-                        Work Location {isFieldRequired('workLocation') && <span className="text-red-500">*</span>}
-                      </Label>
-                      <Input
-                        id="workLocation"
-                        value={formData.workLocation}
-                        onChange={(e) => handleInputChange('workLocation', e.target.value)}
-                        placeholder="Enter work location"
-                      />
-                    </div>
-                  )}
-
-                  {documentType === 'appointment-letter' && (
-                    <div>
-                      <Label htmlFor="reportingManager">
-                        Reporting Manager {isFieldRequired('reportingManager') && <span className="text-red-500">*</span>}
-                      </Label>
-                      <Input
-                        id="reportingManager"
-                        value={formData.reportingManager}
-                        onChange={(e) => handleInputChange('reportingManager', e.target.value)}
-                        placeholder="Enter reporting manager"
-                      />
-                    </div>
-                  )}
-
-                  <div>
-                    <Label htmlFor="email">Email</Label>
-                    <Input
-                      id="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      placeholder="Enter email address"
-                      type="email"
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="phone">Phone</Label>
-                    <Input
-                      id="phone"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      placeholder="Enter phone number"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <Label htmlFor="address">Address</Label>
-                  <Textarea
-                    id="address"
-                    value={formData.address}
-                    onChange={(e) => handleInputChange('address', e.target.value)}
-                    placeholder="Enter employee address"
-                    rows={2}
-                  />
-                </div>
+                {renderFormBasedOnType()}
 
                 <div>
                   <Label htmlFor="additionalDetails">Additional Details</Label>

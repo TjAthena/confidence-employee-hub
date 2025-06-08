@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./contexts/AuthContext";
+import { EmployeeDataProvider } from "./contexts/EmployeeDataContext";
 import Login from "./pages/Login";
 import EmployeeLayout from "./layouts/EmployeeLayout";
 import AdminLayout from "./layouts/AdminLayout";
@@ -23,31 +24,33 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            
-            {/* Employee Routes */}
-            <Route path="/employee" element={<EmployeeLayout />}>
-              <Route path="profile" element={<EmployeeProfile />} />
-              <Route path="announcements" element={<EmployeeAnnouncements />} />
-            </Route>
-            
-            {/* Admin Routes */}
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="employees" element={<ManageEmployees />} />
-              <Route path="generate-document" element={<GenerateDocument />} />
-              <Route path="document-upload" element={<DocumentUpload />} />
-              <Route path="announcements" element={<AdminAnnouncements />} />
-            </Route>
-            
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
+        <EmployeeDataProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Login />} />
+              <Route path="/login" element={<Login />} />
+              
+              {/* Employee Routes */}
+              <Route path="/employee" element={<EmployeeLayout />}>
+                <Route path="profile" element={<EmployeeProfile />} />
+                <Route path="announcements" element={<EmployeeAnnouncements />} />
+              </Route>
+              
+              {/* Admin Routes */}
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="employees" element={<ManageEmployees />} />
+                <Route path="generate-document" element={<GenerateDocument />} />
+                <Route path="document-upload" element={<DocumentUpload />} />
+                <Route path="announcements" element={<AdminAnnouncements />} />
+              </Route>
+              
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </EmployeeDataProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
