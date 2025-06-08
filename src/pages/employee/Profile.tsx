@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEmployeeData } from '@/contexts/EmployeeDataContext';
-import { Download, User, FileText, Phone, Mail, MapPin, Calendar, UserCheck } from 'lucide-react';
+import { Download, User, FileText, Phone, Mail, MapPin, Calendar, UserCheck, CreditCard, IdCard, Heart } from 'lucide-react';
 
 const EmployeeProfile = () => {
   const { user } = useAuth();
@@ -18,13 +18,25 @@ const EmployeeProfile = () => {
     lastName: 'Doe',
     email: 'john.doe@confidencefs.com',
     phoneNumber: '+91 9876543210',
+    dateOfBirth: '1990-05-15',
+    gender: 'Male',
+    maritalStatus: 'Married',
+    aadhaarNumber: '1234-5678-9012',
+    panNumber: 'ABCDE1234F',
     designation: 'Senior Analyst',
     department: 'Finance',
     joiningDate: '2022-03-15',
-    address: '123 Main Street, Mumbai, Maharashtra 400001',
+    address: '123 Main Street',
+    city: 'Mumbai',
+    state: 'Maharashtra',
+    pinCode: '400001',
     emergencyContactName: 'Jane Doe',
     emergencyContactPhone: '+91 9876543211',
-    emergencyContactRelationship: 'Spouse'
+    emergencyContactRelationship: 'Spouse',
+    bankName: 'HDFC Bank',
+    accountNumber: '1234567890123456',
+    ifscCode: 'HDFC0001234',
+    accountType: 'Savings'
   };
 
   const documents = {
@@ -76,14 +88,165 @@ const EmployeeProfile = () => {
                     Joined: {new Date(employeeData.joiningDate).toLocaleDateString('en-IN')}
                   </div>
                 </div>
-                {employeeData.address && (
-                  <div className="flex items-center justify-center sm:justify-start gap-2 text-sm text-gray-600">
-                    <MapPin className="w-4 h-4" />
-                    <span className="text-center sm:text-left">{employeeData.address}</span>
-                  </div>
-                )}
               </div>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Personal Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <User className="w-5 h-5" />
+            Personal Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div>
+              <p className="text-sm text-gray-500">Employee ID</p>
+              <p className="font-medium">{employeeData.id}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">First Name</p>
+              <p className="font-medium">{employeeData.firstName}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Last Name</p>
+              <p className="font-medium">{employeeData.lastName}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Email</p>
+              <p className="font-medium">{employeeData.email}</p>
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Phone Number</p>
+              <p className="font-medium">{employeeData.phoneNumber}</p>
+            </div>
+            {employeeData.dateOfBirth && (
+              <div>
+                <p className="text-sm text-gray-500">Date of Birth</p>
+                <p className="font-medium">{new Date(employeeData.dateOfBirth).toLocaleDateString('en-IN')}</p>
+              </div>
+            )}
+            {employeeData.gender && (
+              <div>
+                <p className="text-sm text-gray-500">Gender</p>
+                <p className="font-medium">{employeeData.gender}</p>
+              </div>
+            )}
+            {employeeData.maritalStatus && (
+              <div>
+                <p className="text-sm text-gray-500">Marital Status</p>
+                <p className="font-medium flex items-center gap-2">
+                  <Heart className="w-4 h-4" />
+                  {employeeData.maritalStatus}
+                </p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Identity Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <IdCard className="w-5 h-5" />
+            Identity Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {employeeData.aadhaarNumber && (
+              <div>
+                <p className="text-sm text-gray-500">Aadhaar Number</p>
+                <p className="font-medium">{employeeData.aadhaarNumber}</p>
+              </div>
+            )}
+            {employeeData.panNumber && (
+              <div>
+                <p className="text-sm text-gray-500">PAN Number</p>
+                <p className="font-medium">{employeeData.panNumber}</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Address Information */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="w-5 h-5" />
+            Address Information
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {employeeData.address && (
+              <div>
+                <p className="text-sm text-gray-500">Address</p>
+                <p className="font-medium">{employeeData.address}</p>
+              </div>
+            )}
+            {employeeData.city && (
+              <div>
+                <p className="text-sm text-gray-500">City</p>
+                <p className="font-medium">{employeeData.city}</p>
+              </div>
+            )}
+            {employeeData.state && (
+              <div>
+                <p className="text-sm text-gray-500">State</p>
+                <p className="font-medium">{employeeData.state}</p>
+              </div>
+            )}
+            {employeeData.pinCode && (
+              <div>
+                <p className="text-sm text-gray-500">PIN Code</p>
+                <p className="font-medium">{employeeData.pinCode}</p>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Bank Details */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <CreditCard className="w-5 h-5" />
+            Bank Details
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {employeeData.bankName && (
+              <div>
+                <p className="text-sm text-gray-500">Bank Name</p>
+                <p className="font-medium">{employeeData.bankName}</p>
+              </div>
+            )}
+            {employeeData.accountNumber && (
+              <div>
+                <p className="text-sm text-gray-500">Account Number</p>
+                <p className="font-medium">{employeeData.accountNumber}</p>
+              </div>
+            )}
+            {employeeData.ifscCode && (
+              <div>
+                <p className="text-sm text-gray-500">IFSC Code</p>
+                <p className="font-medium">{employeeData.ifscCode}</p>
+              </div>
+            )}
+            {employeeData.accountType && (
+              <div>
+                <p className="text-sm text-gray-500">Account Type</p>
+                <p className="font-medium">{employeeData.accountType}</p>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
