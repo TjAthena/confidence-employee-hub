@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,6 +34,9 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel,
     bankName: '',
     accountNumber: '',
     ifscCode: '',
+    pfNumber: '',
+    esiNumber: '',
+    uanNumber: '',
     degree: '',
     institute: '',
     graduationYear: '',
@@ -68,6 +70,9 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel,
         bankName: initialData.bankDetails?.bankName || '',
         accountNumber: initialData.bankDetails?.accountNumber || '',
         ifscCode: initialData.bankDetails?.ifsc || '',
+        pfNumber: initialData.bankDetails?.pfNumber || '',
+        esiNumber: initialData.bankDetails?.esiNumber || '',
+        uanNumber: initialData.bankDetails?.uanNumber || '',
         degree: initialData.education?.degree || '',
         institute: initialData.education?.institute || '',
         graduationYear: initialData.education?.year || '',
@@ -423,13 +428,40 @@ const EditEmployeeForm: React.FC<EditEmployeeFormProps> = ({ onSubmit, onCancel,
                 placeholder="Enter Account Number"
               />
             </div>
-            <div className="md:col-span-2">
+            <div>
               <Label htmlFor="ifscCode">IFSC Code</Label>
               <Input
                 id="ifscCode"
                 value={formData.ifscCode}
                 onChange={(e) => handleInputChange('ifscCode', e.target.value)}
                 placeholder="Enter IFSC Code"
+              />
+            </div>
+            <div>
+              <Label htmlFor="pfNumber">PF Number</Label>
+              <Input
+                id="pfNumber"
+                value={formData.pfNumber}
+                onChange={(e) => handleInputChange('pfNumber', e.target.value)}
+                placeholder="Enter PF Number"
+              />
+            </div>
+            <div>
+              <Label htmlFor="esiNumber">ESI Number</Label>
+              <Input
+                id="esiNumber"
+                value={formData.esiNumber}
+                onChange={(e) => handleInputChange('esiNumber', e.target.value)}
+                placeholder="Enter ESI Number"
+              />
+            </div>
+            <div>
+              <Label htmlFor="uanNumber">UAN Number</Label>
+              <Input
+                id="uanNumber"
+                value={formData.uanNumber}
+                onChange={(e) => handleInputChange('uanNumber', e.target.value)}
+                placeholder="Enter UAN Number"
               />
             </div>
           </CardContent>

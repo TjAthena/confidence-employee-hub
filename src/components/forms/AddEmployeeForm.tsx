@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -63,6 +62,9 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel })
     ifscCode: '',
     accountNumber: '',
     accountType: '',
+    pfNumber: '',
+    esiNumber: '',
+    uanNumber: '',
     
     // Education
     degree: '',
@@ -569,6 +571,33 @@ const AddEmployeeForm: React.FC<AddEmployeeFormProps> = ({ onSubmit, onCancel })
                   <SelectItem value="current">Current</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+            <div>
+              <Label htmlFor="pfNumber">PF Number</Label>
+              <Input
+                id="pfNumber"
+                value={formData.pfNumber}
+                onChange={(e) => handleInputChange('pfNumber', e.target.value)}
+                placeholder="Enter PF Number"
+              />
+            </div>
+            <div>
+              <Label htmlFor="esiNumber">ESI Number</Label>
+              <Input
+                id="esiNumber"
+                value={formData.esiNumber}
+                onChange={(e) => handleInputChange('esiNumber', e.target.value)}
+                placeholder="Enter ESI Number"
+              />
+            </div>
+            <div>
+              <Label htmlFor="uanNumber">UAN Number</Label>
+              <Input
+                id="uanNumber"
+                value={formData.uanNumber}
+                onChange={(e) => handleInputChange('uanNumber', e.target.value)}
+                placeholder="Enter UAN Number"
+              />
             </div>
           </CardContent>
         </Card>
