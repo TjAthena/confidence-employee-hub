@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -376,6 +375,7 @@ const ManageEmployees = () => {
                   <th className="text-left py-3 px-2">ID</th>
                   <th className="text-left py-3 px-2">Role</th>
                   <th className="text-left py-3 px-2">Department</th>
+                  <th className="text-left py-3 px-2">Monthly Salary</th>
                   <th className="text-left py-3 px-2">Actions</th>
                 </tr>
               </thead>
@@ -400,6 +400,9 @@ const ManageEmployees = () => {
                     </td>
                     <td className="py-3 px-2">{employee.role}</td>
                     <td className="py-3 px-2">{employee.department}</td>
+                    <td className="py-3 px-2">
+                      <span className="font-medium text-green-600">₹{employee.salary.monthly.toLocaleString()}</span>
+                    </td>
                     <td className="py-3 px-2">
                       <div className="flex items-center gap-2">
                         <Button 

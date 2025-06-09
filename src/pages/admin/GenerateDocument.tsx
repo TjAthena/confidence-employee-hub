@@ -5,38 +5,43 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { FileText, Download } from 'lucide-react';
+import { Textarea } from '@/components/ui/textarea';
+import { FileText, Download, Calendar, DollarSign, User } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 
 const GenerateDocument = () => {
-  const [documentType, setDocumentType] = useState('');
+  const [selectedDocument, setSelectedDocument] = useState('');
   const [formData, setFormData] = useState({
-    employeeName: '',
+    // Common fields
     employeeId: '',
-    designation: '',
+    employeeName: '',
     department: '',
-    compensation: '',
+    designation: '',
+    
+    // Offer Letter specific
     joiningDate: '',
-    workLocation: '',
+    salary: '',
+    
+    // Increment Letter specific
+    incrementPercentage: '',
+    newSalary: '',
+    effectiveDate: '',
+    
+    // Appointment Letter specific
+    appointmentDate: '',
     reportingManager: '',
-    email: '',
-    phone: '',
-    address: '',
-    companyName: 'Confidence Financial Services',
-    companyAddress: '123 Business District, Mumbai, Maharashtra 400001',
-    // Offer Letter specific fields
-    issuedDate: '',
-    candidateName: '',
-    positionOffered: '',
-    annualCtc: '',
-    // Payslip specific fields
+    
+    // Promotion Letter specific
+    newDesignation: '',
+    promotionDate: '',
+    
+    // Payslip specific
     payslipMonth: '',
     payslipYear: '',
     totalWorkingDays: '',
     presentDays: '',
     leaveDays: '',
     lopDays: '',
-    bonuses: '',
     providentFund: '',
     professionalTax: '',
     mediclaim: '',
@@ -45,9 +50,11 @@ const GenerateDocument = () => {
   });
 
   const documentTypes = [
-    { value: 'offer-letter', label: 'Offer Letter' },
-    { value: 'appointment-letter', label: 'Appointment Letter' },
-    { value: 'payslip', label: 'Payslip' }
+    { value: 'offer-letter', label: 'Offer Letter', icon: FileText },
+    { value: 'appointment-letter', label: 'Appointment Letter', icon: FileText },
+    { value: 'increment-letter', label: 'Increment Letter', icon: DollarSign },
+    { value: 'promotion-letter', label: 'Promotion Letter', icon: User },
+    { value: 'payslip', label: 'Payslip', icon: Calendar }
   ];
 
   const handleInputChange = (field: string, value: string) => {
@@ -57,8 +64,8 @@ const GenerateDocument = () => {
     }));
   };
 
-  const handleGenerateDocument = () => {
-    if (!documentType) {
+  const handleGenerate = () => {
+    if (!selectedDocument) {
       toast({
         title: "Error",
         description: "Please select a document type",
@@ -67,11 +74,8 @@ const GenerateDocument = () => {
       return;
     }
 
-    // Validate required fields based on document type
-    const requiredFields = getRequiredFields();
-    const missingFields = requiredFields.filter(field => !formData[field as keyof typeof formData]);
-    
-    if (missingFields.length > 0) {
+    // Basic validation
+    if (!formData.employeeId || !formData.employeeName) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -80,437 +84,368 @@ const GenerateDocument = () => {
       return;
     }
 
-    // Here you would typically generate the actual document
-    // For now, we'll just show a success message
+    // Document-specific validation
+    if (selectedDocument === 'payslip') {
+      const requiredFields = ['payslipMonth', 'payslipYear', 'totalWorkingDays', 'presentDays'];
+      const missingFields = requiredFields.filter(field => !formData[field]);
+      
+      if (missingFields.length > 0) {
+        toast({
+          title: "Error",
+          description: "Please fill in all required payslip fields",
+          variant: "destructive"
+        });
+        return;
+      }
+    }
+
     toast({
-      title: "Document Generated",
-      description: `${documentTypes.find(t => t.value === documentType)?.label} has been generated successfully`,
+      title: "Success",
+      description: `${documentTypes.find(doc => doc.value === selectedDocument)?.label} generated successfully and ready for download`
     });
   };
 
-  const getRequiredFields = () => {
-    switch (documentType) {
+  const renderDocumentSpecificFields = () => {
+    switch (selectedDocument) {
       case 'offer-letter':
-        return ['issuedDate', 'candidateName', 'positionOffered', 'annualCtc', 'workLocation'];
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="joiningDate">Joining Date</Label>
+                <Input
+                  id="joiningDate"
+                  type="date"
+                  value={formData.joiningDate}
+                  onChange={(e) => handleInputChange('joiningDate', e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="salary">Annual CTC</Label>
+                <Input
+                  id="salary"
+                  value={formData.salary}
+                  onChange={(e) => handleInputChange('salary', e.target.value)}
+                  placeholder="Enter annual CTC"
+                />
+              </div>
+            </div>
+          </>
+        );
+
       case 'appointment-letter':
-        return ['employeeName', 'employeeId', 'designation', 'department', 'joiningDate', 'reportingManager'];
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="appointmentDate">Appointment Date</Label>
+                <Input
+                  id="appointmentDate"
+                  type="date"
+                  value={formData.appointmentDate}
+                  onChange={(e) => handleInputChange('appointmentDate', e.target.value)}
+                />
+              </div>
+              <div>
+                <Label htmlFor="reportingManager">Reporting Manager</Label>
+                <Input
+                  id="reportingManager"
+                  value={formData.reportingManager}
+                  onChange={(e) => handleInputChange('reportingManager', e.target.value)}
+                  placeholder="Enter reporting manager name"
+                />
+              </div>
+            </div>
+          </>
+        );
+
+      case 'increment-letter':
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="incrementPercentage">Increment Percentage</Label>
+                <Input
+                  id="incrementPercentage"
+                  value={formData.incrementPercentage}
+                  onChange={(e) => handleInputChange('incrementPercentage', e.target.value)}
+                  placeholder="Enter increment %"
+                />
+              </div>
+              <div>
+                <Label htmlFor="newSalary">New Annual CTC</Label>
+                <Input
+                  id="newSalary"
+                  value={formData.newSalary}
+                  onChange={(e) => handleInputChange('newSalary', e.target.value)}
+                  placeholder="Enter new annual CTC"
+                />
+              </div>
+              <div>
+                <Label htmlFor="effectiveDate">Effective Date</Label>
+                <Input
+                  id="effectiveDate"
+                  type="date"
+                  value={formData.effectiveDate}
+                  onChange={(e) => handleInputChange('effectiveDate', e.target.value)}
+                />
+              </div>
+            </div>
+          </>
+        );
+
+      case 'promotion-letter':
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <Label htmlFor="newDesignation">New Designation</Label>
+                <Input
+                  id="newDesignation"
+                  value={formData.newDesignation}
+                  onChange={(e) => handleInputChange('newDesignation', e.target.value)}
+                  placeholder="Enter new designation"
+                />
+              </div>
+              <div>
+                <Label htmlFor="promotionDate">Promotion Date</Label>
+                <Input
+                  id="promotionDate"
+                  type="date"
+                  value={formData.promotionDate}
+                  onChange={(e) => handleInputChange('promotionDate', e.target.value)}
+                />
+              </div>
+            </div>
+          </>
+        );
+
       case 'payslip':
-        return ['employeeId', 'payslipMonth', 'payslipYear', 'totalWorkingDays', 'presentDays', 'leaveDays', 'lopDays', 'bonuses', 'providentFund', 'professionalTax', 'mediclaim', 'incomeTax', 'termInsurance'];
-      default:
-        return [];
-    }
-  };
+        return (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="payslipMonth">Payslip Month</Label>
+                <Select value={formData.payslipMonth} onValueChange={(value) => handleInputChange('payslipMonth', value)}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select month" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="01">January</SelectItem>
+                    <SelectItem value="02">February</SelectItem>
+                    <SelectItem value="03">March</SelectItem>
+                    <SelectItem value="04">April</SelectItem>
+                    <SelectItem value="05">May</SelectItem>
+                    <SelectItem value="06">June</SelectItem>
+                    <SelectItem value="07">July</SelectItem>
+                    <SelectItem value="08">August</SelectItem>
+                    <SelectItem value="09">September</SelectItem>
+                    <SelectItem value="10">October</SelectItem>
+                    <SelectItem value="11">November</SelectItem>
+                    <SelectItem value="12">December</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label htmlFor="payslipYear">Payslip Year</Label>
+                <Input
+                  id="payslipYear"
+                  value={formData.payslipYear}
+                  onChange={(e) => handleInputChange('payslipYear', e.target.value)}
+                  placeholder="Enter year"
+                />
+              </div>
+              <div>
+                <Label htmlFor="totalWorkingDays">Total Working Days</Label>
+                <Input
+                  id="totalWorkingDays"
+                  value={formData.totalWorkingDays}
+                  onChange={(e) => handleInputChange('totalWorkingDays', e.target.value)}
+                  placeholder="Enter total working days"
+                />
+              </div>
+              <div>
+                <Label htmlFor="presentDays">Present Days</Label>
+                <Input
+                  id="presentDays"
+                  value={formData.presentDays}
+                  onChange={(e) => handleInputChange('presentDays', e.target.value)}
+                  placeholder="Enter present days"
+                />
+              </div>
+              <div>
+                <Label htmlFor="leaveDays">Leave Days</Label>
+                <Input
+                  id="leaveDays"
+                  value={formData.leaveDays}
+                  onChange={(e) => handleInputChange('leaveDays', e.target.value)}
+                  placeholder="Enter leave days"
+                />
+              </div>
+              <div>
+                <Label htmlFor="lopDays">LOP Days (Loss of Pay)</Label>
+                <Input
+                  id="lopDays"
+                  value={formData.lopDays}
+                  onChange={(e) => handleInputChange('lopDays', e.target.value)}
+                  placeholder="Enter LOP days"
+                />
+              </div>
+              <div>
+                <Label htmlFor="providentFund">Provident Fund</Label>
+                <Input
+                  id="providentFund"
+                  value={formData.providentFund}
+                  onChange={(e) => handleInputChange('providentFund', e.target.value)}
+                  placeholder="Enter PF amount"
+                />
+              </div>
+              <div>
+                <Label htmlFor="professionalTax">Professional Tax</Label>
+                <Input
+                  id="professionalTax"
+                  value={formData.professionalTax}
+                  onChange={(e) => handleInputChange('professionalTax', e.target.value)}
+                  placeholder="Enter professional tax"
+                />
+              </div>
+              <div>
+                <Label htmlFor="mediclaim">Mediclaim</Label>
+                <Input
+                  id="mediclaim"
+                  value={formData.mediclaim}
+                  onChange={(e) => handleInputChange('mediclaim', e.target.value)}
+                  placeholder="Enter mediclaim amount"
+                />
+              </div>
+              <div>
+                <Label htmlFor="incomeTax">Income Tax</Label>
+                <Input
+                  id="incomeTax"
+                  value={formData.incomeTax}
+                  onChange={(e) => handleInputChange('incomeTax', e.target.value)}
+                  placeholder="Enter income tax"
+                />
+              </div>
+              <div>
+                <Label htmlFor="termInsurance">Term Insurance</Label>
+                <Input
+                  id="termInsurance"
+                  value={formData.termInsurance}
+                  onChange={(e) => handleInputChange('termInsurance', e.target.value)}
+                  placeholder="Enter term insurance"
+                />
+              </div>
+            </div>
+          </>
+        );
 
-  const isFieldRequired = (field: string) => {
-    return getRequiredFields().includes(field);
-  };
-
-  const renderOfferLetterForm = () => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="issuedDate">
-            Issued Date <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="issuedDate"
-            value={formData.issuedDate}
-            onChange={(e) => handleInputChange('issuedDate', e.target.value)}
-            type="date"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="candidateName">
-            Candidate Name <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="candidateName"
-            value={formData.candidateName}
-            onChange={(e) => handleInputChange('candidateName', e.target.value)}
-            placeholder="Enter candidate name"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="positionOffered">
-            Position Offered/Designation <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="positionOffered"
-            value={formData.positionOffered}
-            onChange={(e) => handleInputChange('positionOffered', e.target.value)}
-            placeholder="Enter position offered"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="annualCtc">
-            Annual CTC <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="annualCtc"
-            value={formData.annualCtc}
-            onChange={(e) => handleInputChange('annualCtc', e.target.value)}
-            placeholder="Enter annual CTC amount"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="workLocation">
-            Work Location <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="workLocation"
-            value={formData.workLocation}
-            onChange={(e) => handleInputChange('workLocation', e.target.value)}
-            placeholder="Enter work location"
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderAppointmentLetterForm = () => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="employeeName">
-            Employee Name <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="employeeName"
-            value={formData.employeeName}
-            onChange={(e) => handleInputChange('employeeName', e.target.value)}
-            placeholder="Enter employee name"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="employeeId">
-            Employee ID <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="employeeId"
-            value={formData.employeeId}
-            onChange={(e) => handleInputChange('employeeId', e.target.value)}
-            placeholder="Enter employee ID"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="designation">
-            Designation <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="designation"
-            value={formData.designation}
-            onChange={(e) => handleInputChange('designation', e.target.value)}
-            placeholder="Enter designation"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="department">
-            Department <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="department"
-            value={formData.department}
-            onChange={(e) => handleInputChange('department', e.target.value)}
-            placeholder="Enter department"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="joiningDate">
-            Joining Date <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="joiningDate"
-            value={formData.joiningDate}
-            onChange={(e) => handleInputChange('joiningDate', e.target.value)}
-            type="date"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="reportingManager">
-            Reporting Manager <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="reportingManager"
-            value={formData.reportingManager}
-            onChange={(e) => handleInputChange('reportingManager', e.target.value)}
-            placeholder="Enter reporting manager"
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderPayslipForm = () => (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="employeeId">
-            Employee ID <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="employeeId"
-            value={formData.employeeId}
-            onChange={(e) => handleInputChange('employeeId', e.target.value)}
-            placeholder="Enter employee ID"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="payslipMonth">
-            Payslip Month <span className="text-red-500">*</span>
-          </Label>
-          <Select value={formData.payslipMonth} onValueChange={(value) => handleInputChange('payslipMonth', value)}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select month" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="01">January</SelectItem>
-              <SelectItem value="02">February</SelectItem>
-              <SelectItem value="03">March</SelectItem>
-              <SelectItem value="04">April</SelectItem>
-              <SelectItem value="05">May</SelectItem>
-              <SelectItem value="06">June</SelectItem>
-              <SelectItem value="07">July</SelectItem>
-              <SelectItem value="08">August</SelectItem>
-              <SelectItem value="09">September</SelectItem>
-              <SelectItem value="10">October</SelectItem>
-              <SelectItem value="11">November</SelectItem>
-              <SelectItem value="12">December</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div>
-          <Label htmlFor="payslipYear">
-            Payslip Year <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="payslipYear"
-            value={formData.payslipYear}
-            onChange={(e) => handleInputChange('payslipYear', e.target.value)}
-            placeholder="Enter year (e.g., 2024)"
-            type="number"
-            min="2020"
-            max="2030"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="totalWorkingDays">
-            Total Working Days <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="totalWorkingDays"
-            value={formData.totalWorkingDays}
-            onChange={(e) => handleInputChange('totalWorkingDays', e.target.value)}
-            placeholder="Enter total working days"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="presentDays">
-            Present Days <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="presentDays"
-            value={formData.presentDays}
-            onChange={(e) => handleInputChange('presentDays', e.target.value)}
-            placeholder="Enter present days"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="leaveDays">
-            Leave Days <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="leaveDays"
-            value={formData.leaveDays}
-            onChange={(e) => handleInputChange('leaveDays', e.target.value)}
-            placeholder="Enter leave days"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="lopDays">
-            LOP Days (Loss of Pay) <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="lopDays"
-            value={formData.lopDays}
-            onChange={(e) => handleInputChange('lopDays', e.target.value)}
-            placeholder="Enter LOP days"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="bonuses">
-            Bonuses/Incentives <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="bonuses"
-            value={formData.bonuses}
-            onChange={(e) => handleInputChange('bonuses', e.target.value)}
-            placeholder="Enter bonus amount"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="providentFund">
-            Provident Fund <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="providentFund"
-            value={formData.providentFund}
-            onChange={(e) => handleInputChange('providentFund', e.target.value)}
-            placeholder="Enter PF amount"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="professionalTax">
-            Professional Tax <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="professionalTax"
-            value={formData.professionalTax}
-            onChange={(e) => handleInputChange('professionalTax', e.target.value)}
-            placeholder="Enter professional tax"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="mediclaim">
-            Mediclaim <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="mediclaim"
-            value={formData.mediclaim}
-            onChange={(e) => handleInputChange('mediclaim', e.target.value)}
-            placeholder="Enter mediclaim amount"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="incomeTax">
-            Income Tax <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="incomeTax"
-            value={formData.incomeTax}
-            onChange={(e) => handleInputChange('incomeTax', e.target.value)}
-            placeholder="Enter income tax"
-            type="number"
-          />
-        </div>
-
-        <div>
-          <Label htmlFor="termInsurance">
-            Term Insurance <span className="text-red-500">*</span>
-          </Label>
-          <Input
-            id="termInsurance"
-            value={formData.termInsurance}
-            onChange={(e) => handleInputChange('termInsurance', e.target.value)}
-            placeholder="Enter term insurance"
-            type="number"
-          />
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderFormBasedOnType = () => {
-    switch (documentType) {
-      case 'offer-letter':
-        return renderOfferLetterForm();
-      case 'appointment-letter':
-        return renderAppointmentLetterForm();
-      case 'payslip':
-        return renderPayslipForm();
       default:
         return null;
     }
   };
 
   return (
-    <div className="space-y-6 animate-fade-in px-4 sm:px-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-navy mb-2">Generate Document</h1>
-        <p className="text-gray-600">Generate official documents for employees</p>
+        <h1 className="text-2xl font-bold text-navy mb-2">Generate Documents</h1>
+        <p className="text-gray-600">Create official documents for employees</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Document Type Selection */}
-        <Card className="lg:col-span-1">
+      {/* Document Type Selection */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Select Document Type</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
+            {documentTypes.map((docType) => {
+              const Icon = docType.icon;
+              return (
+                <button
+                  key={docType.value}
+                  onClick={() => setSelectedDocument(docType.value)}
+                  className={`p-4 border rounded-lg text-center transition-all hover:scale-105 ${
+                    selectedDocument === docType.value
+                      ? 'border-blue-accent bg-blue-50 text-blue-accent'
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                >
+                  <Icon className="w-8 h-8 mx-auto mb-2" />
+                  <p className="font-medium text-sm">{docType.label}</p>
+                </button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Document Form */}
+      {selectedDocument && (
+        <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <FileText className="w-5 h-5" />
-              Document Type
+            <CardTitle>
+              {documentTypes.find(doc => doc.value === selectedDocument)?.label} Details
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="space-y-3">
-              {documentTypes.map((type) => (
-                <Button
-                  key={type.value}
-                  variant={documentType === type.value ? "default" : "outline"}
-                  className="w-full justify-start"
-                  onClick={() => setDocumentType(type.value)}
-                >
-                  <FileText className="w-4 h-4 mr-2" />
-                  {type.label}
-                </Button>
-              ))}
+          <CardContent className="space-y-6">
+            {/* Common Fields */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <Label htmlFor="employeeId">Employee ID *</Label>
+                <Input
+                  id="employeeId"
+                  value={formData.employeeId}
+                  onChange={(e) => handleInputChange('employeeId', e.target.value)}
+                  placeholder="Enter employee ID"
+                />
+              </div>
+              <div>
+                <Label htmlFor="employeeName">Employee Name *</Label>
+                <Input
+                  id="employeeName"
+                  value={formData.employeeName}
+                  onChange={(e) => handleInputChange('employeeName', e.target.value)}
+                  placeholder="Enter employee name"
+                />
+              </div>
+              <div>
+                <Label htmlFor="department">Department</Label>
+                <Input
+                  id="department"
+                  value={formData.department}
+                  onChange={(e) => handleInputChange('department', e.target.value)}
+                  placeholder="Enter department"
+                />
+              </div>
+              <div>
+                <Label htmlFor="designation">Designation</Label>
+                <Input
+                  id="designation"
+                  value={formData.designation}
+                  onChange={(e) => handleInputChange('designation', e.target.value)}
+                  placeholder="Enter designation"
+                />
+              </div>
+            </div>
+
+            {/* Document Specific Fields */}
+            {renderDocumentSpecificFields()}
+
+            {/* Generate Button */}
+            <div className="pt-4">
+              <Button 
+                onClick={handleGenerate}
+                className="bg-blue-accent hover:bg-blue-600"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Generate {documentTypes.find(doc => doc.value === selectedDocument)?.label}
+              </Button>
             </div>
           </CardContent>
         </Card>
-
-        {/* Form */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <CardTitle>Document Details</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {!documentType ? (
-              <div className="text-center py-8 text-gray-500">
-                <FileText className="w-12 h-12 mx-auto mb-4 opacity-50" />
-                <p>Please select a document type to continue</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {renderFormBasedOnType()}
-
-                <div className="flex justify-end pt-4">
-                  <Button onClick={handleGenerateDocument} className="flex items-center gap-2">
-                    <Download className="w-4 h-4" />
-                    Generate & Download
-                  </Button>
-                </div>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-      </div>
+      )}
     </div>
   );
 };

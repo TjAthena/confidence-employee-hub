@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, FileText, Download, Calendar } from 'lucide-react';
+import { Users, FileText, Download, Calendar, DollarSign } from 'lucide-react';
 
 const AdminDashboard = () => {
   const metrics = [
@@ -18,7 +19,14 @@ const AdminDashboard = () => {
       value: '₹8,50,000',
       change: '+5.2% from last year',
       changeType: 'positive' as const,
-      icon: Users
+      icon: DollarSign
+    },
+    {
+      title: 'Total Salary',
+      value: '₹10.79 Cr',
+      change: '+12.3% from last year',
+      changeType: 'positive' as const,
+      icon: DollarSign
     },
     {
       title: 'Total Announcements',
@@ -90,7 +98,7 @@ const AdminDashboard = () => {
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {metrics.map((metric, index) => {
           const Icon = metric.icon;
           return (

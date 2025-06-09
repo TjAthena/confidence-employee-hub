@@ -94,190 +94,180 @@ const EmployeeProfile = () => {
         </CardContent>
       </Card>
 
-      {/* Personal Information */}
+      {/* Combined Employee Information */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="w-5 h-5" />
-            Personal Information
+            Employee Information
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-8">
+            {/* Personal Information */}
             <div>
-              <p className="text-sm text-gray-500">Employee ID</p>
-              <p className="font-medium">{employeeData.id}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">First Name</p>
-              <p className="font-medium">{employeeData.firstName}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Last Name</p>
-              <p className="font-medium">{employeeData.lastName}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Email</p>
-              <p className="font-medium">{employeeData.email}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray-500">Phone Number</p>
-              <p className="font-medium">{employeeData.phoneNumber}</p>
-            </div>
-            {employeeData.dateOfBirth && (
-              <div>
-                <p className="text-sm text-gray-500">Date of Birth</p>
-                <p className="font-medium">{new Date(employeeData.dateOfBirth).toLocaleDateString('en-IN')}</p>
+              <h3 className="text-lg font-semibold text-navy mb-4">Personal Information</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div>
+                  <p className="text-sm text-gray-500">Employee ID</p>
+                  <p className="font-medium">{employeeData.id}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">First Name</p>
+                  <p className="font-medium">{employeeData.firstName}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Last Name</p>
+                  <p className="font-medium">{employeeData.lastName}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Email</p>
+                  <p className="font-medium">{employeeData.email}</p>
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">Phone Number</p>
+                  <p className="font-medium">{employeeData.phoneNumber}</p>
+                </div>
+                {employeeData.dateOfBirth && (
+                  <div>
+                    <p className="text-sm text-gray-500">Date of Birth</p>
+                    <p className="font-medium">{new Date(employeeData.dateOfBirth).toLocaleDateString('en-IN')}</p>
+                  </div>
+                )}
+                {employeeData.gender && (
+                  <div>
+                    <p className="text-sm text-gray-500">Gender</p>
+                    <p className="font-medium">{employeeData.gender}</p>
+                  </div>
+                )}
+                {employeeData.maritalStatus && (
+                  <div>
+                    <p className="text-sm text-gray-500">Marital Status</p>
+                    <p className="font-medium flex items-center gap-2">
+                      <Heart className="w-4 h-4" />
+                      {employeeData.maritalStatus}
+                    </p>
+                  </div>
+                )}
               </div>
-            )}
-            {employeeData.gender && (
-              <div>
-                <p className="text-sm text-gray-500">Gender</p>
-                <p className="font-medium">{employeeData.gender}</p>
+            </div>
+
+            {/* Identity Information */}
+            <div>
+              <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
+                <IdCard className="w-5 h-5" />
+                Identity Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {employeeData.aadhaarNumber && (
+                  <div>
+                    <p className="text-sm text-gray-500">Aadhaar Number</p>
+                    <p className="font-medium">{employeeData.aadhaarNumber}</p>
+                  </div>
+                )}
+                {employeeData.panNumber && (
+                  <div>
+                    <p className="text-sm text-gray-500">PAN Number</p>
+                    <p className="font-medium">{employeeData.panNumber}</p>
+                  </div>
+                )}
               </div>
-            )}
-            {employeeData.maritalStatus && (
+            </div>
+
+            {/* Address Information */}
+            <div>
+              <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
+                <MapPin className="w-5 h-5" />
+                Address Information
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {employeeData.address && (
+                  <div>
+                    <p className="text-sm text-gray-500">Address</p>
+                    <p className="font-medium">{employeeData.address}</p>
+                  </div>
+                )}
+                {employeeData.city && (
+                  <div>
+                    <p className="text-sm text-gray-500">City</p>
+                    <p className="font-medium">{employeeData.city}</p>
+                  </div>
+                )}
+                {employeeData.state && (
+                  <div>
+                    <p className="text-sm text-gray-500">State</p>
+                    <p className="font-medium">{employeeData.state}</p>
+                  </div>
+                )}
+                {employeeData.pinCode && (
+                  <div>
+                    <p className="text-sm text-gray-500">PIN Code</p>
+                    <p className="font-medium">{employeeData.pinCode}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Bank Details */}
+            <div>
+              <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
+                <CreditCard className="w-5 h-5" />
+                Bank Details
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {employeeData.bankName && (
+                  <div>
+                    <p className="text-sm text-gray-500">Bank Name</p>
+                    <p className="font-medium">{employeeData.bankName}</p>
+                  </div>
+                )}
+                {employeeData.accountNumber && (
+                  <div>
+                    <p className="text-sm text-gray-500">Account Number</p>
+                    <p className="font-medium">{employeeData.accountNumber}</p>
+                  </div>
+                )}
+                {employeeData.ifscCode && (
+                  <div>
+                    <p className="text-sm text-gray-500">IFSC Code</p>
+                    <p className="font-medium">{employeeData.ifscCode}</p>
+                  </div>
+                )}
+                {employeeData.accountType && (
+                  <div>
+                    <p className="text-sm text-gray-500">Account Type</p>
+                    <p className="font-medium">{employeeData.accountType}</p>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Emergency Contact Information */}
+            {employeeData.emergencyContactName && (
               <div>
-                <p className="text-sm text-gray-500">Marital Status</p>
-                <p className="font-medium flex items-center gap-2">
-                  <Heart className="w-4 h-4" />
-                  {employeeData.maritalStatus}
-                </p>
+                <h3 className="text-lg font-semibold text-navy mb-4 flex items-center gap-2">
+                  <UserCheck className="w-5 h-5" />
+                  Emergency Contact
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <p className="text-sm text-gray-500">Name</p>
+                    <p className="font-medium">{employeeData.emergencyContactName}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Relationship</p>
+                    <p className="font-medium">{employeeData.emergencyContactRelationship}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500">Phone</p>
+                    <p className="font-medium">{employeeData.emergencyContactPhone}</p>
+                  </div>
+                </div>
               </div>
             )}
           </div>
         </CardContent>
       </Card>
-
-      {/* Identity Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <IdCard className="w-5 h-5" />
-            Identity Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {employeeData.aadhaarNumber && (
-              <div>
-                <p className="text-sm text-gray-500">Aadhaar Number</p>
-                <p className="font-medium">{employeeData.aadhaarNumber}</p>
-              </div>
-            )}
-            {employeeData.panNumber && (
-              <div>
-                <p className="text-sm text-gray-500">PAN Number</p>
-                <p className="font-medium">{employeeData.panNumber}</p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Address Information */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="w-5 h-5" />
-            Address Information
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {employeeData.address && (
-              <div>
-                <p className="text-sm text-gray-500">Address</p>
-                <p className="font-medium">{employeeData.address}</p>
-              </div>
-            )}
-            {employeeData.city && (
-              <div>
-                <p className="text-sm text-gray-500">City</p>
-                <p className="font-medium">{employeeData.city}</p>
-              </div>
-            )}
-            {employeeData.state && (
-              <div>
-                <p className="text-sm text-gray-500">State</p>
-                <p className="font-medium">{employeeData.state}</p>
-              </div>
-            )}
-            {employeeData.pinCode && (
-              <div>
-                <p className="text-sm text-gray-500">PIN Code</p>
-                <p className="font-medium">{employeeData.pinCode}</p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Bank Details */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="w-5 h-5" />
-            Bank Details
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {employeeData.bankName && (
-              <div>
-                <p className="text-sm text-gray-500">Bank Name</p>
-                <p className="font-medium">{employeeData.bankName}</p>
-              </div>
-            )}
-            {employeeData.accountNumber && (
-              <div>
-                <p className="text-sm text-gray-500">Account Number</p>
-                <p className="font-medium">{employeeData.accountNumber}</p>
-              </div>
-            )}
-            {employeeData.ifscCode && (
-              <div>
-                <p className="text-sm text-gray-500">IFSC Code</p>
-                <p className="font-medium">{employeeData.ifscCode}</p>
-              </div>
-            )}
-            {employeeData.accountType && (
-              <div>
-                <p className="text-sm text-gray-500">Account Type</p>
-                <p className="font-medium">{employeeData.accountType}</p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Emergency Contact Information */}
-      {employeeData.emergencyContactName && (
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <UserCheck className="w-5 h-5" />
-              Emergency Contact
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div>
-                <p className="text-sm text-gray-500">Name</p>
-                <p className="font-medium">{employeeData.emergencyContactName}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Relationship</p>
-                <p className="font-medium">{employeeData.emergencyContactRelationship}</p>
-              </div>
-              <div>
-                <p className="text-sm text-gray-500">Phone</p>
-                <p className="font-medium">{employeeData.emergencyContactPhone}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       {/* Documents Section */}
       <Card>
